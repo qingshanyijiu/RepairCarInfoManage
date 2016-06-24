@@ -133,23 +133,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CriticalLock.cpp" />
+    <ClCompile Include="DbBase.cpp" />
     <ClCompile Include="RepairCarInfoSaveDB.cpp" />
     <ClCompile Include="RepairCarInfoSaveImpl.cpp" />
+    <ClCompile Include="RepairInfoTable.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="TableOperateBase.cpp" />
+    <ClCompile Include="UserInfoTable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CriticalLock.h" />
     <ClInclude Include="dba.h" />
+    <ClInclude Include="DbBase.h" />
     <ClInclude Include="RepairCarInfoSaveDB.h" />
     <ClInclude Include="RepairCarInfoSaveImpl.h" />
+    <ClInclude Include="RepairInfoTable.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SingletonInstance.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="TableOperateBase.h" />
+    <ClInclude Include="UserInfoTable.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RepairCarInfoSaveDB.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

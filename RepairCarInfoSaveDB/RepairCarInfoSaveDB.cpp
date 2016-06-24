@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "RepairCarInfoSaveDB.h"
+#include "SingletonInstance.h"
 #include "RepairCarInfoSaveImpl.h"
 
 BOOL APIENTRY DllMain( HANDLE hModule, 
@@ -21,45 +22,12 @@ BOOL APIENTRY DllMain( HANDLE hModule,
     return TRUE;
 }
 
-template<typename DataType>
-class CSingleInstance
-{
-public:
-	CSingleInstance()
-	{
-		m_pInstance = NULL;
-	}
-	~CSingleInstance()
-	{
-		if (NULL != m_pInstance)
-			delete m_pInstance;
-	}
-	
-	void Set(DataType* pInstance)
-	{
-		if (m_pInstance)
-			delete m_pInstance;
-		m_pInstance = pInstance;
-	}
-	
-public:
-	DataType*	m_pInstance;	
-};
-
-static CSingleInstance<CRepairCarInfoSaveImpl>	m_ImplInstance;
-
 int REPAIRCARINFOSAVEDB_API OpenDb(const char* lpFileName)
 {
-	if (NULL == m_ImplInstance.m_pInstance)
-		m_ImplInstance.Set(new CRepairCarInfoSaveImpl());
-
-	return m_ImplInstance.m_pInstance->OpenDb(lpFileName);
+	return CSingletonInstance<CRepairCarInfoSaveImpl>::GetInstance()->OpenDb(lpFileName);
 }
 
 int REPAIRCARINFOSAVEDB_API CloseDb()
 {
-	if (NULL == m_ImplInstance.m_pInstance)
-		return REPAIRCARINFOSAVEDB_ERROR;
-
-	return m_ImplInstance.m_pInstance->CloseDb();
+	return CSingletonInstance<CRepairCarInfoSaveImpl>::GetInstance()->CloseDb();
 }

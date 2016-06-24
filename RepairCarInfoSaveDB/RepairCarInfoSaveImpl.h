@@ -9,6 +9,10 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "DbBase.h"
+#include "RepairInfoTable.h"
+#include "UserInfoTable.h"
+
 class CRepairCarInfoSaveImpl  
 {
 public:
@@ -19,6 +23,10 @@ public:
 	int CloseDb();
 
 
+protected:
+	CDbBase*				m_pDbBase;
+	CUserInfoTable*			m_pUserTableOp;
+	CRepairInfoTable*		m_pRepairTableOp;
 };
 
 #endif // !defined(AFX_REPAIRCARINFOSAVEIMPL_H__DD0623E2_56C5_4225_91C5_DDCA939648DB__INCLUDED_)

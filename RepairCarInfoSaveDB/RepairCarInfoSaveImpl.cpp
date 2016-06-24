@@ -21,6 +21,10 @@ CRepairCarInfoSaveImpl::~CRepairCarInfoSaveImpl()
 
 int CRepairCarInfoSaveImpl::OpenDb(const char* lpFileName)
 {
+	m_pDbBase			= CDbBase::GetInstance();
+	m_pUserTableOp		= CUserInfoTable::GetInstance(m_pDbBase);
+	m_pRepairTableOp	= CRepairInfoTable::GetInstance(m_pDbBase);
+
 	return 1;
 }
 
