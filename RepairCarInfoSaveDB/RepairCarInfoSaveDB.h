@@ -7,9 +7,13 @@
 #define REPAIRCARINFOSAVEDB_API __declspec(dllimport)
 #endif
 
+#ifndef REPAIRCARINFOSAVEDB_SUCCESS
 
 #define	REPAIRCARINFOSAVEDB_SUCCESS		(0)
 #define	REPAIRCARINFOSAVEDB_ERROR		(1)
+
+#endif
+
 	
 
 int REPAIRCARINFOSAVEDB_API OpenDb(const char* lpFileName);

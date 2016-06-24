@@ -21,4 +21,12 @@
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
+
+#ifndef REPAIRCARINFOSAVEDB_SUCCESS
+
+#define	REPAIRCARINFOSAVEDB_SUCCESS		(0)
+#define	REPAIRCARINFOSAVEDB_ERROR		(1)
+
+#endif
+
 #endif // !defined(AFX_STDAFX_H__26D0EE9E_760B_4E80_A124_E942BB887D7D__INCLUDED_)

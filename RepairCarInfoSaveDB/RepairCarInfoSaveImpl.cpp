@@ -25,10 +25,17 @@ int CRepairCarInfoSaveImpl::OpenDb(const char* lpFileName)
 	m_pUserTableOp		= CUserInfoTable::GetInstance(m_pDbBase);
 	m_pRepairTableOp	= CRepairInfoTable::GetInstance(m_pDbBase);
 
-	return 1;
+	int iRes = m_pDbBase->OpenDb(lpFileName);
+	if (SQLITE_OK == iRes)
+	{
+		m_pUserTableOp->InitTable();
+		m_pRepairTableOp->InitTable();
+	}
+
+	return iRes;
 }
 
 int CRepairCarInfoSaveImpl::CloseDb()
 {
-	return 1;
+	return m_pDbBase->CloseDb();
 }

@@ -8,7 +8,7 @@ public:
 	CTableOperateBase(CDbBase* pBase);
 	virtual ~CTableOperateBase(void);
 
-	virtual void InitTable() = 0;
+	virtual int InitTable() = 0;
 
 protected:
 	CDbBase*	m_pDbBase;

@@ -10,6 +10,6 @@ public:
 	CUserInfoTable(CDbBase* pBase);
 	~CUserInfoTable(void);
 
-	void InitTable();
+	int InitTable();
 };
 

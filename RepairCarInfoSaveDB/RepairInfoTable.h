@@ -10,7 +10,7 @@ public:
 	CRepairInfoTable(CDbBase* pBase);
 	~CRepairInfoTable(void);
 
-	void InitTable();
+	int InitTable();
 	
 
 protected:
