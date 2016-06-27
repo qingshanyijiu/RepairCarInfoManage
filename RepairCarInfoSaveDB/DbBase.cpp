@@ -37,7 +37,6 @@ int CDbBase::OpenDb(const char* lpFileName)
 	}
 	MakeSureDirectoryPathExists(strPath.c_str());
 
-	CCriticalLock::CAutoLock lock(m_dbLock);
 	int iRes = m_dbOp.open(strPath.c_str());
 	if (SQLITE_OK == iRes)
 		m_bIsOpen = true;
@@ -50,7 +49,6 @@ int CDbBase::CloseDb()
 	int iRes  = SQLITE_OK;
 	if (m_bIsOpen)
 	{
-		CCriticalLock::CAutoLock lock(m_dbLock);
 		iRes = m_dbOp.close();
 		if (SQLITE_OK == iRes)
 			m_bIsOpen  = false;

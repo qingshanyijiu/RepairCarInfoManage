@@ -11,9 +11,19 @@ public:
 	~CRepairInfoTable(void);
 
 	int InitTable();
-	
+	int	InsertRepairInfo(PRepairTableInfo	pInfo);
+	int	UpdateRepairInfo(PRepairTableInfo	pInfo);
+	int GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+	int GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+	int GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+	int	DeleteRepairInfoByLicNumber(const char* lpLicNumer);
 
 protected:
+	int GetRepairInfoAllData(int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+	int GetRepairInfoData(const char* lpSql,std::list<RepairTableInfo>& repairInfoList);
+
+protected:
+	static int GetRepairInfoDataHandle(void * lpPara, int nColumn, char ** lppColumnValue, char ** lppColumnName);
 
 };
 
