@@ -45,7 +45,7 @@
     <ClInclude Include="UserMngDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ButtnExd.h">
+    <ClInclude Include="ButtonExd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,7 +65,7 @@
     <ClCompile Include="UserMngDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ButtnExd.cpp">
+    <ClCompile Include="ButtonExd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

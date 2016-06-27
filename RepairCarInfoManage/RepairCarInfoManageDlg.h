@@ -5,7 +5,7 @@
 #pragma once
 #include <vector>
 #include <map>
-
+class CButtonExd;
 
 // CRepairCarInfoManageDlg 对话框
 class CRepairCarInfoManageDlg : public CDialogEx
@@ -26,6 +26,7 @@ private:
 	BOOL ShowParamDlg(CWnd* pWnd, BOOL bShow);
 	CWnd* m_pCurrentWnd;
 	BTNREL m_btnRel;
+	CButtonExd* m_root;
 // 实现
 protected:
 	HICON m_hIcon;

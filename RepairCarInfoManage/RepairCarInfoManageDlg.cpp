@@ -8,7 +8,7 @@
 #include "afxdialogex.h"
 #include "UserMngDlg.h"
 #include "MaintenanceMngDlg.h"
-
+#include "ButtonExd.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -56,6 +56,8 @@ CRepairCarInfoManageDlg::CRepairCarInfoManageDlg(CWnd* pParent /*=NULL*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_pCurrentWnd = NULL;
+	m_root = new CButtonExd();
+	m_root->SetRoot(true);
 }
 
 void CRepairCarInfoManageDlg::DoDataExchange(CDataExchange* pDX)
@@ -122,6 +124,35 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	m_btnRel[BTN_ROOT].push_back(IDC_BTN_MTINFOMNG);
 	m_btnRel[IDC_BTN_USERMNG].push_back(IDC_BTN_USERQUERY);
 	m_btnRel[IDC_BTN_USERMNG].push_back(IDC_BTN_USERADD);
+
+	CButtonExd *pCurrent=m_root,*pChild =NULL;
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMNG),_T("用户信息管理"),10,2);	
+	pCurrent->AddChild(pChild);
+	pChild->SetAbsolutePos(true);
+
+	pCurrent = pChild;
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERQUERY),_T("查询"),10,2);
+	pCurrent->AddChild(pChild);
+
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERADD),_T("增加"),0,2);
+	pCurrent->AddChild(pChild);
+
+	pCurrent=m_root;
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTINFOMNG),_T("维护信息管理"),0,2);	
+	pCurrent->AddChild(pChild);
+	pChild->SetAbsolutePos(true);
+
+	pCurrent = pChild;
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTQUERY),_T("查询"),10,2);
+	pCurrent->AddChild(pChild);
+
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTADD),_T("增加"),0,2);
+	pCurrent->AddChild(pChild);
+
+	
+
+	m_root->Show();
+	m_root->Expand();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -193,13 +224,17 @@ BOOL CRepairCarInfoManageDlg::ShowParamDlg(CWnd* pWnd, BOOL bShow)
 void CRepairCarInfoManageDlg::OnBnClickedBtnUsermng()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
-	if (m_pCurrentWnd != NULL)
+	/*if (m_pCurrentWnd != NULL)
 	{
 		m_pCurrentWnd->ShowWindow(SW_HIDE);
 	}
 
 	m_pCurrentWnd = m_pages.at(0);
-	m_pCurrentWnd->ShowWindow(SW_SHOW);
+	m_pCurrentWnd->ShowWindow(SW_SHOW);*/
+	if(m_root->m_Childs[0]->IsExpand())
+		m_root->m_Childs[0]->Folded();
+	else
+		m_root->m_Childs[0]->Expand();
 }
 
 

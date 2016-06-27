@@ -99,7 +99,7 @@
     <None Include="res\RepairCarInfoManage.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ButtnExd.h" />
+    <ClInclude Include="ButtonExd.h" />
     <ClInclude Include="MaintenanceMngDlg.h" />
     <ClInclude Include="RepairCarInfoManage.h" />
     <ClInclude Include="RepairCarInfoManageDlg.h" />
@@ -109,7 +109,7 @@
     <ClInclude Include="UserMngDlg.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ButtnExd.cpp" />
+    <ClCompile Include="ButtonExd.cpp" />
     <ClCompile Include="MaintenanceMngDlg.cpp" />
     <ClCompile Include="RepairCarInfoManage.cpp" />
     <ClCompile Include="RepairCarInfoManageDlg.cpp" />
