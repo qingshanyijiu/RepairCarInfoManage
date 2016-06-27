@@ -7,7 +7,6 @@ extern "C"
 #include "../ktdb/sqliteLimit.h"
 };
 
-#include <vector>
 #include <sstream>
 #include <string>
 using namespace std;
@@ -21,46 +20,6 @@ using namespace std;
 
 typedef std::ostringstream sqlstring;
 
-//ascii 转 utf-8
-class a2u8
-{
-public:
-	explicit a2u8(const char * str):u8(0)
-	{
-		//转成unicode
-		int len=strlen(str);
-		int unicodeLen=MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, 0);
-		wchar_t* pUnicode = new wchar_t[unicodeLen+1];
-		memset(pUnicode,0,(unicodeLen+1)*sizeof(wchar_t));
-		MultiByteToWideChar(CP_ACP, 0, str, -1, (LPWSTR)pUnicode, unicodeLen);
-
-		//utf-8
-		BYTE * pTargetData=0;
-		int targetLen=WideCharToMultiByte(CP_UTF8 , 0, (LPWSTR)pUnicode, -1, (char *)pTargetData, 0, NULL, NULL);
-		pTargetData=new BYTE[targetLen+1];
-		memset(pTargetData, 0, targetLen+1);
-		WideCharToMultiByte(CP_UTF8,0,(LPWSTR)pUnicode,-1,(char *)pTargetData,targetLen,NULL,NULL);
-
-		//复制到
-		u8 = new TCHAR[targetLen+1];
-		memset(u8, 0, targetLen+1);
-		wsprintf(u8,"%s",pTargetData);
-		
-		delete[] pUnicode;
-		delete[] pTargetData;
-	}
-
-	~a2u8(){delete [] u8;}
-
-	operator const char *()const {return u8;} 
-private:
-	a2u8();
-	a2u8& operator=(const a2u8&);
-
-private:
-	char * u8;
-};
-
 
 class db_operator
 {
@@ -72,14 +31,10 @@ public:
 	{
 	}
 
-	int open(const char * filename)
+	int open(const char * lpFilename)
 	{
-		db_file_name_ = filename;
-		int res = sqlite3_open(a2u8(db_file_name_.c_str()), &p_db_);
-		if (SQLITE_OK==res)
-		{
-		}
-
+		int res = sqlite3_open(lpFilename, &p_db_);
+	
 		return res;
 
 	}
@@ -157,12 +112,16 @@ public:
 		return res;
 	}
 
+	sqlite3* GetDB()
+	{
+		return p_db_;
+	}
+
 
 private:
 	db_operator(const db_operator&);
 	db_operator& operator=(const db_operator&);
 
-	string db_file_name_;
 	struct sqlite3 * p_db_;
 };
 #endif
