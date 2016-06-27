@@ -3,6 +3,8 @@
 //
 
 #pragma once
+#include <vector>
+#include <map>
 
 
 // CRepairCarInfoManageDlg 对话框
@@ -17,8 +19,13 @@ public:
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
-
-
+private:
+	typedef std::vector<CDialog *> PageArray;
+	typedef std::map<long,std::vector<long> > BTNREL;
+	PageArray m_pages;
+	BOOL ShowParamDlg(CWnd* pWnd, BOOL bShow);
+	CWnd* m_pCurrentWnd;
+	BTNREL m_btnRel;
 // 实现
 protected:
 	HICON m_hIcon;
@@ -29,4 +36,7 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedBtnUsermng();
+	afx_msg void OnBnClickedBtnMtinfomng();
 };
