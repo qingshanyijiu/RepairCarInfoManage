@@ -154,12 +154,12 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	pChild->SetAbsolutePos(true);
 
 	pCurrent = pChild;
-	GetDlgItem(IDC_BTN_USERQUERY)->GetWindowRect(&ChildRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERQUERY),_T("查询"),PRect.Width()-ChildRect.Width(),2);
+	GetDlgItem(IDC_BTN_USERMODIFY)->GetWindowRect(&ChildRect);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMODIFY),_T("增加/修改"),PRect.Width()-ChildRect.Width(),2);
 	pCurrent->AddChild(pChild);
 
-	GetDlgItem(IDC_BTN_USERMODIFY)->GetWindowRect(&ChildRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMODIFY),_T("增加/修改"),0,2);
+	GetDlgItem(IDC_BTN_USERQUERY)->GetWindowRect(&ChildRect);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERQUERY),_T("查询"),0,2);
 	pCurrent->AddChild(pChild);
 
 	pCurrent=m_root;
@@ -168,14 +168,13 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	pCurrent->AddChild(pChild);
 
 	pCurrent = pChild;
-	GetDlgItem(IDC_BTN_MTQUERY)->GetWindowRect(&ChildRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTQUERY),_T("查询"),PRect.Width()-ChildRect.Width(),2);
-	pCurrent->AddChild(pChild);
-
 	GetDlgItem(IDC_BTN_MTMODIFY)->GetWindowRect(&ChildRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTMODIFY),_T("增加/修改"),0,2);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTMODIFY),_T("增加/修改"),PRect.Width()-ChildRect.Width(),2);
 	pCurrent->AddChild(pChild);
 
+	GetDlgItem(IDC_BTN_MTQUERY)->GetWindowRect(&ChildRect);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTQUERY),_T("查询"),0,2);
+	pCurrent->AddChild(pChild);
 
 	pCurrent=m_root;
 	GetDlgItem(IDC_BUTTON_SystemSet)->GetWindowRect(&PRect);
