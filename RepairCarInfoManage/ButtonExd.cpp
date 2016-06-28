@@ -52,6 +52,7 @@ void CButtonExd::Move(int leftpad,int toppad)
 	rc.right+=leftpad;
 	rc.top+=toppad;
 	m_pBtn->MoveWindow(rc);
+	m_rc.OffsetRect(leftpad,toppad);
 	for (int i=0;i<m_Childs.size();++i)
 	{
 		m_Childs[i]->Move(leftpad,toppad);

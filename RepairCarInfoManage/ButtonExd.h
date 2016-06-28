@@ -54,6 +54,11 @@ public:
 	{
 		return m_Name;
 	}
+
+	bool IsShow()
+	{
+		return m_bShow;
+	}
 private:
 	void Revise(int leftpad,int toppad);
 	void Move(int leftpad,int toppad);

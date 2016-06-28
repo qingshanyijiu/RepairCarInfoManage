@@ -30,7 +30,7 @@ private:
 // 实现
 protected:
 	HICON m_hIcon;
-
+	void Expand(int index);
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
@@ -40,4 +40,5 @@ protected:
 public:
 	afx_msg void OnBnClickedBtnUsermng();
 	afx_msg void OnBnClickedBtnMtinfomng();
+	afx_msg void OnBnClickedButtonSystemset();
 };
