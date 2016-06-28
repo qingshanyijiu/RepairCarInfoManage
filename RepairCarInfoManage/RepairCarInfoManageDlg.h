@@ -20,17 +20,16 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 private:
-	typedef std::vector<CDialog *> PageArray;
-	typedef std::map<long,std::vector<long> > BTNREL;
-	PageArray m_pages;
+	typedef std::map<long,CDialog *> PageMap;
+	PageMap m_pages;
 	BOOL ShowParamDlg(CWnd* pWnd, BOOL bShow);
 	CWnd* m_pCurrentWnd;
-	BTNREL m_btnRel;
 	CButtonExd* m_root;
 // 实现
 protected:
 	HICON m_hIcon;
 	void Expand(int index);
+	void RightPageShow(long DLGID);
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
@@ -41,4 +40,9 @@ public:
 	afx_msg void OnBnClickedBtnUsermng();
 	afx_msg void OnBnClickedBtnMtinfomng();
 	afx_msg void OnBnClickedButtonSystemset();
+	afx_msg void OnBnClickedBtnUserquery();
+	afx_msg void OnBnClickedBtnUsermodify();
+	afx_msg void OnBnClickedBtnMtquery();
+	afx_msg void OnBnClickedBtnMtmodify();
+	afx_msg void OnBnClickedButtonBasicset();
 };

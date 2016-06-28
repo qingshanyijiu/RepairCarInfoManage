@@ -6,7 +6,7 @@
 #include "RepairCarInfoManage.h"
 #include "RepairCarInfoManageDlg.h"
 #include "afxdialogex.h"
-#include "UserMngDlg.h"
+#include "UserMngQueryDlg.h"
 #include "MaintenanceMngDlg.h"
 #include "ButtonExd.h"
 
@@ -72,6 +72,11 @@ BEGIN_MESSAGE_MAP(CRepairCarInfoManageDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_USERMNG, &CRepairCarInfoManageDlg::OnBnClickedBtnUsermng)
 	ON_BN_CLICKED(IDC_BTN_MTINFOMNG, &CRepairCarInfoManageDlg::OnBnClickedBtnMtinfomng)
 	ON_BN_CLICKED(IDC_BUTTON_SystemSet, &CRepairCarInfoManageDlg::OnBnClickedButtonSystemset)
+	ON_BN_CLICKED(IDC_BTN_USERQUERY, &CRepairCarInfoManageDlg::OnBnClickedBtnUserquery)
+	ON_BN_CLICKED(IDC_BTN_USERMODIFY, &CRepairCarInfoManageDlg::OnBnClickedBtnUsermodify)
+	ON_BN_CLICKED(IDC_BTN_MTQUERY, &CRepairCarInfoManageDlg::OnBnClickedBtnMtquery)
+	ON_BN_CLICKED(IDC_BTN_MTMODIFY, &CRepairCarInfoManageDlg::OnBnClickedBtnMtmodify)
+	ON_BN_CLICKED(IDC_BUTTON_BasicSet, &CRepairCarInfoManageDlg::OnBnClickedButtonBasicset)
 END_MESSAGE_MAP()
 
 
@@ -109,22 +114,37 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	// TODO: 在此添加额外的初始化代码
 	CDialog* pWnd = nullptr;
 
-	//用户管理page
-	pWnd = new CUserMngDlg();
-	pWnd->Create(CUserMngDlg::IDD,this);
+	//用户管理 
+	//查询
+	pWnd = new CDialog();
+	pWnd->Create(IDD_USERMNG_QUERY_DLG,this);
 	ShowParamDlg(pWnd,FALSE);
-	m_pages.push_back(pWnd);
-
-	//维护管理page
-	pWnd = new CMaintenanceMngDlg();
-	pWnd->Create(CMaintenanceMngDlg::IDD,this);
+	m_pages[IDD_USERMNG_QUERY_DLG] = pWnd;
+	//增加/修改
+	pWnd = new CUserMngQueryDlg();
+	pWnd->Create(IDD_USERMNG_MODIFY_DLG,this);
 	ShowParamDlg(pWnd,FALSE);
-	m_pages.push_back(pWnd);
+	m_pages[IDD_USERMNG_MODIFY_DLG] = pWnd;
 
-	m_btnRel[BTN_ROOT].push_back(IDC_BTN_USERMNG);
-	m_btnRel[BTN_ROOT].push_back(IDC_BTN_MTINFOMNG);
-	m_btnRel[IDC_BTN_USERMNG].push_back(IDC_BTN_USERQUERY);
-	m_btnRel[IDC_BTN_USERMNG].push_back(IDC_BTN_USERMODIFY);
+	//维护信息
+	//查询
+	pWnd = new CDialog();
+	pWnd->Create(IDD_MaintenanceMng_QUERY_Dlg,this);
+	ShowParamDlg(pWnd,FALSE);
+	m_pages[IDD_MaintenanceMng_QUERY_Dlg] = pWnd;
+	//增加/修改
+	pWnd = new CDialog();
+	pWnd->Create(IDD_MaintenanceMng_MODIFY_Dlg,this);
+	ShowParamDlg(pWnd,FALSE);
+	m_pages[IDD_MaintenanceMng_MODIFY_Dlg] = pWnd;
+
+	//系统设置
+	//基本配置
+	pWnd = new CDialog();
+	pWnd->Create(IDD_SYSSET_BASIC_DLG,this);
+	ShowParamDlg(pWnd,FALSE);
+	m_pages[IDD_SYSSET_BASIC_DLG] = pWnd;
+	
 	int leftpad =0,toppad =0;
 	CButtonExd *pCurrent=m_root,*pChild =NULL;
 	CRect PRect,ChildRect;
@@ -251,12 +271,20 @@ void CRepairCarInfoManageDlg::Expand(int index)
 	if(m_root->m_Childs[index]->IsExpand())
 		return;
 	m_root->m_Childs[index]->Expand();
-	for (int i=0;i<BigMenus;++i)
+	for (int i=BigMenus-1;i>=0;--i)
 	{
 		if(i!=index)
 		{
 			m_root->m_Childs[i]->Folded();
 		}
+	}
+	if(index<BigMenus-1)
+	{
+		CRect rc = m_root->m_Childs[BigMenus-1]->GetRect();
+		CRect DlgRc;
+		GetClientRect(&DlgRc);
+		int toppad = DlgRc.bottom-rc.bottom;
+		m_root->m_Childs[index]->Revise(0,toppad);
 	}
 }
 
@@ -294,4 +322,51 @@ void CRepairCarInfoManageDlg::OnBnClickedButtonSystemset()
 		m_root->m_Childs[2]->Folded();
 	else
 		Expand(2);
+}
+
+void CRepairCarInfoManageDlg::RightPageShow(long DLGID)
+{
+	if(m_pages[DLGID] == NULL)
+		return;
+	if (m_pCurrentWnd != NULL)
+	{
+		m_pCurrentWnd->ShowWindow(SW_HIDE);
+	}
+
+	m_pCurrentWnd = m_pages[DLGID];
+	m_pCurrentWnd->ShowWindow(SW_SHOW);
+}
+
+void CRepairCarInfoManageDlg::OnBnClickedBtnUserquery()
+{
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
+	RightPageShow(IDD_USERMNG_QUERY_DLG);
+}
+
+
+void CRepairCarInfoManageDlg::OnBnClickedBtnUsermodify()
+{
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
+	RightPageShow(IDD_USERMNG_MODIFY_DLG);
+}
+
+
+void CRepairCarInfoManageDlg::OnBnClickedBtnMtquery()
+{
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
+	RightPageShow(IDD_MaintenanceMng_QUERY_Dlg);
+}
+
+
+void CRepairCarInfoManageDlg::OnBnClickedBtnMtmodify()
+{
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
+	RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
+}
+
+
+void CRepairCarInfoManageDlg::OnBnClickedButtonBasicset()
+{
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
+	RightPageShow(IDD_SYSSET_BASIC_DLG);
 }

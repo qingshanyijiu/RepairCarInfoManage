@@ -63,15 +63,26 @@ void CButtonExd::Revise(int leftpad,int toppad)
 {
 	if(m_parent == NULL ||(leftpad==0 && toppad==0))
 		return;
-	for (int i=m_index+1;i<m_parent->m_Childs.size();++i)
+	if(toppad<0)
 	{
-		if(!m_parent->m_Childs[i]->m_bUseAbsolutePos)
-			m_parent->m_Childs[i]->Move(leftpad,toppad);
+		for (int i=m_index+1;i<m_parent->m_Childs.size();++i)
+		{
+			if(!m_parent->m_Childs[i]->m_bUseAbsolutePos)
+				m_parent->m_Childs[i]->Move(leftpad,toppad);
+		}
+	}
+	else
+	{
+		for (int i=m_parent->m_Childs.size()-1;i>m_index;--i)
+		{
+			if(!m_parent->m_Childs[i]->m_bUseAbsolutePos)
+				m_parent->m_Childs[i]->Move(leftpad,toppad);
+		}
 	}
 	m_parent->Revise(leftpad,toppad);
 }
 
-CRect CButtonExd::Show(bool NeedRevise,int leftpad,int toppad)
+CRect CButtonExd::Show(bool NeedRevise,int leftpad,int toppad,bool bdelay ,CArray<CButton*>* pButtons )
 {
 	if(m_bShow ||(m_parent!=NULL&&m_parent->m_bShow == false))
 		return m_rc;
@@ -103,7 +114,10 @@ CRect CButtonExd::Show(bool NeedRevise,int leftpad,int toppad)
 			m_pBtn->GetWindowRect(m_rc);
 			m_pWnd->ScreenToClient(&m_rc);
 		}
-		m_pBtn->ShowWindow(SW_SHOW);
+		if(bdelay && pButtons!=NULL)
+			pButtons->Add(m_pBtn);
+		else
+			m_pBtn->ShowWindow(SW_SHOW);
 	}	
 	if(m_bExpand)
 	{
@@ -159,26 +173,21 @@ CRect CButtonExd::Expand()
 	CRect RetRect,UnionRC;
 	int childtoppad = 0;
 	CRect beforeCuurentRC = m_rc;
+	CArray<CButton*>* pButtons = new CArray<CButton*>();
 	for (int i=0;i<m_Childs.size();++i)
 	{
 		CRect beforeRC = m_Childs[i]->m_rc;
-		RetRect = m_Childs[i]->Show();
+		RetRect = m_Childs[i]->Show(false,0,0,true,pButtons);
 		childtoppad =RetRect.bottom-beforeRC.bottom;
 		UnionRC.UnionRect(m_rc,RetRect);
 		m_rc = UnionRC;
 	}
 	Revise(0,m_rc.bottom-beforeCuurentRC.bottom);
-	return m_rc;
-	/*CRect beforeCuurentRC = m_rc;
-	CRect RetRect;
-	CRect BeforeRC;
-	int leftpad =0, toppad = 0;
-	for(int i=0;i<m_Childs.size();++i)
+	for (int i=0;i<pButtons->GetCount();++i)
 	{
-		BeforeRC = m_Childs[i]->m_rc;
-		RetRect = m_Childs[i]->Show(leftpad,toppad);
-		toppad = BeforeRC.
-	}*/
+		pButtons->GetAt(i)->ShowWindow(SW_SHOW);
+	}
+	return m_rc;
 }
 
 CRect CButtonExd::Folded()
@@ -190,10 +199,12 @@ CRect CButtonExd::Folded()
 		m_Childs[i]->Hide();
 
 	CRect rc;
-	m_pBtn->GetWindowRect(&rc);
-	Revise(0,-(m_rc.Height()-rc.Height()));
 	m_pBtn->GetWindowRect(&m_rc);
 	m_pWnd->ScreenToClient(&m_rc);
+	m_pBtn->GetWindowRect(&rc);
+	if(m_index<m_parent->m_Childs.size()-1)
+		Revise(0,-(m_parent->m_Childs[m_index+1]->m_rc.top-m_rc.bottom-m_parent->m_Childs[m_index+1]->m_toppad));
+	
 	return m_rc;
 
 }

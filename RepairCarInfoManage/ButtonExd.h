@@ -20,11 +20,13 @@ private:
 	int m_index;
 	CRect m_rc;
 public:
-	CRect Show(bool NeedRevise = false,int leftpad = 0,int toppad = 0);
+	CRect Show(bool NeedRevise = false,int leftpad = 0,int toppad = 0,bool bdelay =false,CArray<CButton*>* pButtons = NULL);
 	CRect Hide(bool NeedRevise = false);
 	CRect Expand();
 	CRect Folded();
 	void AddChild(CButtonExd* pChild);
+	void Move(int leftpad,int toppad);
+	void Revise(int leftpad,int toppad);
 	void SetRoot(bool bRoot)
 	{
 		m_bIsRoot = bRoot;
@@ -59,9 +61,14 @@ public:
 	{
 		return m_bShow;
 	}
+
+	CRect GetRect()
+	{
+		return m_rc;
+	}
 private:
-	void Revise(int leftpad,int toppad);
-	void Move(int leftpad,int toppad);
+	
+	
 public:
 	CButtonExd(void);
 	~CButtonExd(void);
