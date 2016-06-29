@@ -2,6 +2,7 @@
 #include "ButtonExd.h"
 
 
+
 CButtonExd::CButtonExd(void)
 {
 	m_bShow = false;
@@ -12,12 +13,15 @@ CButtonExd::CButtonExd(void)
 	m_toppad = 0;
 	m_index = 0;
 	m_rc.SetRect(0,0,0,0);
-	m_bIsRoot = false;
 	m_Name = _T("");
 	m_bUseAbsolutePos = false;
+	m_all = NULL;
+	m_ID = 0;
+	m_BeforeLBClickDealFunc = 0;
+	m_AfterLBClickDealFunc = 0;
 }
 
-CButtonExd::CButtonExd(CWnd* pWnd,CButton* pBtn,LPTSTR Name ,int leftpad,int toppad)
+CButtonExd::CButtonExd(CWnd* pWnd,CButton* pBtn,LPTSTR Name,long nID ,int leftpad,int toppad)
 {
 	m_bShow = false;
 	m_bExpand = false;
@@ -28,9 +32,12 @@ CButtonExd::CButtonExd(CWnd* pWnd,CButton* pBtn,LPTSTR Name ,int leftpad,int top
 	m_toppad = toppad;
 	m_index = 0;
 	m_rc.SetRect(0,0,0,0);
-	m_bIsRoot = false;
 	m_Name.Format(_T("%s"),Name);
 	m_bUseAbsolutePos = false;
+	m_all = NULL;
+	m_ID = nID;
+	m_BeforeLBClickDealFunc = 0;
+	m_AfterLBClickDealFunc = 0;
 }
 
 CButtonExd::~CButtonExd(void)
@@ -40,6 +47,9 @@ CButtonExd::~CButtonExd(void)
 		delete m_Childs[i];
 	}
 	m_Childs.clear();
+
+	if(IsRoot()&& m_all!=NULL)
+		delete m_all;
 }
 
 void CButtonExd::Move(int leftpad,int toppad)
@@ -95,7 +105,7 @@ CRect CButtonExd::Show(bool NeedRevise,int leftpad,int toppad,bool bdelay ,CArra
 		pCompareButton = m_parent;
 	if(pCompareButton != NULL)
 	{
-		if(!pCompareButton->m_bIsRoot&&!m_bUseAbsolutePos)
+		if(!pCompareButton->IsRoot()&&!m_bUseAbsolutePos)
 		{
 			CRect rc_c;
 			pCompareButton->m_pBtn->GetWindowRect(&rc_c);
@@ -163,6 +173,9 @@ void CButtonExd::AddChild(CButtonExd* pChild)
 	pChild->m_index = m_Childs.size()-1;
 	pChild->m_bShow = false;
 	pChild->m_pBtn->ShowWindow(SW_HIDE);
+	pChild->RemoveFromBtnMap(pChild->m_ID);
+	AddToBtnMap(pChild->m_ID,pChild);
+	pChild->m_all = m_all;
 }
 
 CRect CButtonExd::Expand()
@@ -207,4 +220,66 @@ CRect CButtonExd::Folded()
 	
 	return m_rc;
 
+}
+
+bool CButtonExd::OnLBClick()
+{
+	if(m_BeforeLBClickDealFunc)
+		m_BeforeLBClickDealFunc();
+	if(m_bExpand)
+		Folded();
+	else
+		Expand();
+	if(m_AfterLBClickDealFunc)
+		m_AfterLBClickDealFunc();
+	return true;
+}
+
+
+bool CButtonExd::OnCommond(CButtonExd* pRootBtn,WPARAM wParam,LPARAM lParam)
+{
+	long ID = LOWORD(wParam);
+	BtnMapType::iterator iter = pRootBtn->m_all->find(ID);
+	if(iter == pRootBtn->m_all->end())
+		return false;
+	int iEvent = HIWORD(wParam);
+	switch(iEvent)
+	{
+	case BN_CLICKED:
+		iter->second->OnLBClick();
+		break;
+	default:
+		return false;
+	}
+	return true;
+}
+
+void CButtonExd::InitBtnMap()
+{
+	if(m_parent != NULL)
+		return;
+	if (m_all == NULL)
+	{
+		m_all = new BtnMapType();
+		m_all->insert(std::make_pair(m_ID,this));
+	}
+}
+
+bool CButtonExd::AddToBtnMap(long ID,CButtonExd* pBtn)
+{
+	if(m_all == NULL)
+		return false;
+	m_all->insert(std::make_pair(ID,pBtn));
+	return true;
+}
+
+bool CButtonExd::RemoveFromBtnMap(long ID)
+{
+	if(m_all == NULL)
+		return false;
+	BtnMapType::iterator iter = m_all->find(ID);
+	if(iter == m_all->end())
+		return false;
+	m_all->erase(iter);
+	return true;
 }

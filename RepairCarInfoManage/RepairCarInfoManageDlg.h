@@ -30,6 +30,8 @@ protected:
 	HICON m_hIcon;
 	void Expand(int index);
 	void RightPageShow(long DLGID);
+	void TestBofore();
+	void TestAfter();
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
@@ -45,4 +47,6 @@ public:
 	afx_msg void OnBnClickedBtnMtquery();
 	afx_msg void OnBnClickedBtnMtmodify();
 	afx_msg void OnBnClickedButtonBasicset();
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
