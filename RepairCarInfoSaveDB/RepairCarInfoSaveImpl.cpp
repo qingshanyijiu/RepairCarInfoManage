@@ -65,7 +65,7 @@ int	CRepairCarInfoSaveImpl::UpdateUserInfo(PUserTableInfo	pInfo)
 	return m_pUserTableOp->UpdateUserInfo(pInfo);
 }
 
-int CRepairCarInfoSaveImpl::GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
+int CRepairCarInfoSaveImpl::GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == m_pUserTableOp)
 		return REPAIRCARINFOSAVEDB_ERROR;
@@ -74,7 +74,7 @@ int CRepairCarInfoSaveImpl::GetUserInfoByLicNumber(const char* lpLicNumer,int iP
 	return m_pUserTableOp->GetUserInfoByLicNumber(lpLicNumer,iPages,iMaxCount,userInfoList,bOrderInc);
 }
 
-int CRepairCarInfoSaveImpl::GetUserInfoByName(const char* lpName,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
+int CRepairCarInfoSaveImpl::GetUserInfoByName(const char* lpName,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == m_pUserTableOp)
 		return REPAIRCARINFOSAVEDB_ERROR;
@@ -83,7 +83,7 @@ int CRepairCarInfoSaveImpl::GetUserInfoByName(const char* lpName,int iPages,int 
 	return m_pUserTableOp->GetUserInfoByName(lpName,iPages,iMaxCount,userInfoList,bOrderInc);
 }
 
-int CRepairCarInfoSaveImpl::GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
+int CRepairCarInfoSaveImpl::GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == m_pUserTableOp)
 		return REPAIRCARINFOSAVEDB_ERROR;
@@ -119,7 +119,7 @@ int	CRepairCarInfoSaveImpl::UpdateRepairInfo(PRepairTableInfo	pInfo)
 	return m_pRepairTableOp->UpdateRepairInfo(pInfo);
 }
 
-int CRepairCarInfoSaveImpl::GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
+int CRepairCarInfoSaveImpl::GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == m_pRepairTableOp)
 		return REPAIRCARINFOSAVEDB_ERROR;
@@ -128,7 +128,7 @@ int CRepairCarInfoSaveImpl::GetRepairInfoByLicNumber(const char* lpLicNumer,int 
 	return m_pRepairTableOp->GetRepairInfoByLicNumber(lpLicNumer,iPages,iMaxCount,repairInfoList,bOrderInc);
 }
 
-int CRepairCarInfoSaveImpl::GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
+int CRepairCarInfoSaveImpl::GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == m_pRepairTableOp)
 		return REPAIRCARINFOSAVEDB_ERROR;
@@ -137,7 +137,7 @@ int CRepairCarInfoSaveImpl::GetRepairInfoByDate(const char* lpDate,int iPages,in
 	return m_pRepairTableOp->GetRepairInfoByDate(lpDate,iPages,iMaxCount,repairInfoList,bOrderInc);
 }
 
-int CRepairCarInfoSaveImpl::GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
+int CRepairCarInfoSaveImpl::GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == m_pRepairTableOp)
 		return REPAIRCARINFOSAVEDB_ERROR;

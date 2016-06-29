@@ -39,16 +39,22 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MaintenanceMngDlg.h">
+    <ClInclude Include="ButtonExd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ButtonExd.h">
+    <ClInclude Include="UserInfoDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UserMngQueryDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UserInfoDlg.h">
+    <ClInclude Include="RepairInfoDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RepairInfoQueryDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemSetDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,16 +68,22 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MaintenanceMngDlg.cpp">
+    <ClCompile Include="ButtonExd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ButtonExd.cpp">
+    <ClCompile Include="UserInfoDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UserMngQueryDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UserInfoDlg.cpp">
+    <ClCompile Include="RepairInfoDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RepairInfoQueryDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemSetDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

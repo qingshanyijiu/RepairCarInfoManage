@@ -26,16 +26,16 @@ public:
 
 	int	InsertUserInfo(PUserTableInfo	pInfo);
 	int	UpdateUserInfo(PUserTableInfo	pInfo);
-	int GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc=true);
-	int GetUserInfoByName(const char* lpName,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc=true);
-	int GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc=true);
+	int GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc=true);
+	int GetUserInfoByName(const char* lpName,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc=true);
+	int GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc=true);
 	int	DeleteUserInfoByLicNumber(const char* lpLicNumer);
 
 	int	InsertRepairInfo(PRepairTableInfo	pInfo);
 	int	UpdateRepairInfo(PRepairTableInfo	pInfo);
-	int GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
-	int GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
-	int GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+	int GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+	int GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+	int GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
 	int	DeleteRepairInfoByLicNumber(const char* lpLicNumer);
 
 protected:

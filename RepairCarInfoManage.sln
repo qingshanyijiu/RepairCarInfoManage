@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RepairCarInfoManage", "RepairCarInfoManage\RepairCarInfoManage.vcxproj", "{069822A1-15F1-46F8-A921-CCE2CF57D281}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66B95B2B-84E4-3D65-405B-69ACF7BE951E} = {66B95B2B-84E4-3D65-405B-69ACF7BE951E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RepairCarInfoSaveDB", "RepairCarInfoSaveDB\RepairCarInfoSaveDB.vcxproj", "{66B95B2B-84E4-3D65-405B-69ACF7BE951E}"
 EndProject

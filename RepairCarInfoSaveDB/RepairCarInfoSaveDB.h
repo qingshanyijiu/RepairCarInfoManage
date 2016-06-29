@@ -2,7 +2,7 @@
 #define ___REPAIRCARINFOSAVEDB_____H
 
 #include <string>
-#include <list>
+#include <vector>
 
 #ifdef REPAIRCARINFOSAVEDB_EXPORTS
 #define REPAIRCARINFOSAVEDB_API __declspec(dllexport)
@@ -70,11 +70,11 @@ int	REPAIRCARINFOSAVEDB_API InsertUserInfo(PUserTableInfo	pInfo);
 
 int	REPAIRCARINFOSAVEDB_API UpdateUserInfo(PUserTableInfo	pInfo);
 
-int REPAIRCARINFOSAVEDB_API GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc=true);
+int REPAIRCARINFOSAVEDB_API GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc=true);
 
-int REPAIRCARINFOSAVEDB_API GetUserInfoByName(const char* lpName,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc=true);
+int REPAIRCARINFOSAVEDB_API GetUserInfoByName(const char* lpName,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc=true);
 
-int REPAIRCARINFOSAVEDB_API GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc=true);
+int REPAIRCARINFOSAVEDB_API GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc=true);
 
 int	REPAIRCARINFOSAVEDB_API DeleteUserInfoByLicNumber(const char* lpLicNumer);
 
@@ -82,11 +82,11 @@ int	REPAIRCARINFOSAVEDB_API InsertRepairInfo(PRepairTableInfo	pInfo);
 
 int	REPAIRCARINFOSAVEDB_API UpdateRepairInfo(PRepairTableInfo	pInfo);
 
-int REPAIRCARINFOSAVEDB_API GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+int REPAIRCARINFOSAVEDB_API GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
 
-int REPAIRCARINFOSAVEDB_API GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+int REPAIRCARINFOSAVEDB_API GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
 
-int REPAIRCARINFOSAVEDB_API GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
+int REPAIRCARINFOSAVEDB_API GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
 
 int	REPAIRCARINFOSAVEDB_API DeleteRepairInfoByLicNumber(const char* lpLicNumer);
 

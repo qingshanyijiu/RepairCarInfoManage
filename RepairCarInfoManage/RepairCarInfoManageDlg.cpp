@@ -7,7 +7,10 @@
 #include "RepairCarInfoManageDlg.h"
 #include "afxdialogex.h"
 #include "UserMngQueryDlg.h"
-#include "MaintenanceMngDlg.h"
+#include "UserInfoDlg.h"
+#include "RepairInfoDlg.h"
+#include "RepairInfoQueryDlg.h"
+#include "SystemSetDlg.h"
 #include "ButtonExd.h"
 
 #ifdef _DEBUG
@@ -31,6 +34,8 @@ public:
 // 实现
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+//	afx_msg void OnSmenuUserdelete();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
@@ -43,6 +48,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+//	ON_COMMAND(ID_SMENU_UserDelete, &CAboutDlg::OnSmenuUserdelete)
 END_MESSAGE_MAP()
 
 
@@ -109,31 +115,31 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 
 	//用户管理 
 	//查询
-	pWnd = new CDialog();
+	pWnd = new CUserMngQueryDlg();
 	pWnd->Create(IDD_USERMNG_QUERY_DLG,this);
 	ShowParamDlg(pWnd,FALSE);
 	m_pages[IDD_USERMNG_QUERY_DLG] = pWnd;
 	//增加/修改
-	pWnd = new CUserMngQueryDlg();
+	pWnd = new CUserInfoDlg();
 	pWnd->Create(IDD_USERMNG_MODIFY_DLG,this);
 	ShowParamDlg(pWnd,FALSE);
 	m_pages[IDD_USERMNG_MODIFY_DLG] = pWnd;
 
 	//维护信息
 	//查询
-	pWnd = new CDialog();
+	pWnd = new CRepairInfoQueryDlg();
 	pWnd->Create(IDD_MaintenanceMng_QUERY_Dlg,this);
 	ShowParamDlg(pWnd,FALSE);
 	m_pages[IDD_MaintenanceMng_QUERY_Dlg] = pWnd;
 	//增加/修改
-	pWnd = new CDialog();
+	pWnd = new CRepairInfoDlg();
 	pWnd->Create(IDD_MaintenanceMng_MODIFY_Dlg,this);
 	ShowParamDlg(pWnd,FALSE);
 	m_pages[IDD_MaintenanceMng_MODIFY_Dlg] = pWnd;
 
 	//系统设置
 	//基本配置
-	pWnd = new CDialog();
+	pWnd = new CSystemSetDlg();
 	pWnd->Create(IDD_SYSSET_BASIC_DLG,this);
 	ShowParamDlg(pWnd,FALSE);
 	m_pages[IDD_SYSSET_BASIC_DLG] = pWnd;

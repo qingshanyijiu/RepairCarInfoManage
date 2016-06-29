@@ -73,7 +73,7 @@ int	CRepairInfoTable::UpdateRepairInfo(PRepairTableInfo	pInfo)
 	return iRes;
 }
 
-int CRepairInfoTable::GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
+int CRepairInfoTable::GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == lpLicNumer||0 == strlen(lpLicNumer))
 		return GetRepairInfoAllData(iPages,iMaxCount,repairInfoList,bOrderInc);
@@ -88,7 +88,7 @@ int CRepairInfoTable::GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages
 	return GetRepairInfoData(sql.str().c_str(),repairInfoList);
 }
 
-int CRepairInfoTable::GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
+int CRepairInfoTable::GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == lpDate||0 == strlen(lpDate))
 		return GetRepairInfoAllData(iPages,iMaxCount,repairInfoList,bOrderInc);
@@ -103,7 +103,7 @@ int CRepairInfoTable::GetRepairInfoByDate(const char* lpDate,int iPages,int iMax
 	return GetRepairInfoData(sql.str().c_str(),repairInfoList);
 }
 
-int CRepairInfoTable::GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
+int CRepairInfoTable::GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == lpBeinDate||0 == strlen(lpBeinDate)||NULL == lpEndDate||0 == strlen(lpEndDate))
 		return GetRepairInfoAllData(iPages,iMaxCount,repairInfoList,bOrderInc);
@@ -131,7 +131,7 @@ int	CRepairInfoTable::DeleteRepairInfoByLicNumber(const char* lpLicNumer)
 	return iRes;
 }
 
-int CRepairInfoTable::GetRepairInfoAllData(int iPages,int iMaxCount,std::list<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
+int CRepairInfoTable::GetRepairInfoAllData(int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	sqlstring sql;
 	sql<<"select * from RepairInfo order by licenseNumber ";
@@ -142,14 +142,14 @@ int CRepairInfoTable::GetRepairInfoAllData(int iPages,int iMaxCount,std::list<Re
 	return GetRepairInfoData(sql.str().c_str(),repairInfoList);
 }
 
-int CRepairInfoTable::GetRepairInfoData(const char* lpSql,std::list<RepairTableInfo>& repairInfoList)
+int CRepairInfoTable::GetRepairInfoData(const char* lpSql,std::vector<RepairTableInfo>& repairInfoList)
 {
 	return m_pDbBase->m_dbOp.execute(lpSql,CRepairInfoTable::GetRepairInfoDataHandle,&repairInfoList,NULL);
 }
 
 int CRepairInfoTable::GetRepairInfoDataHandle(void * lpPara, int nColumn, char ** lppColumnValue, char ** lppColumnName)
 {
-	std::list<RepairTableInfo>* pRepairList = (std::list<RepairTableInfo>*)lpPara;
+	std::vector<RepairTableInfo>* pRepairList = (std::vector<RepairTableInfo>*)lpPara;
 	RepairTableInfo tempInfo;
 
 	for (int i=0;i<nColumn;++i)

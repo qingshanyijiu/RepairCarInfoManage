@@ -88,7 +88,7 @@ int	CUserInfoTable::UpdateUserInfo(PUserTableInfo	pInfo)
 	return iRes;
 }
 
-int CUserInfoTable::GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
+int CUserInfoTable::GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == lpLicNumer||0 == strlen(lpLicNumer))
 		return GetUserInfoAllData(iPages,iMaxCount,userInfoList,bOrderInc);
@@ -103,7 +103,7 @@ int CUserInfoTable::GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int
 	return GetUserInfoData(sql.str().c_str(),userInfoList);
 }
 
-int CUserInfoTable::GetUserInfoByName(const char* lpName,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
+int CUserInfoTable::GetUserInfoByName(const char* lpName,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == lpName||0 == strlen(lpName))
 		return GetUserInfoAllData(iPages,iMaxCount,userInfoList,bOrderInc);
@@ -118,7 +118,7 @@ int CUserInfoTable::GetUserInfoByName(const char* lpName,int iPages,int iMaxCoun
 	return GetUserInfoData(sql.str().c_str(),userInfoList);
 }
 
-int CUserInfoTable::GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
+int CUserInfoTable::GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == lpPhoneNumer||0 == strlen(lpPhoneNumer))
 		return GetUserInfoAllData(iPages,iMaxCount,userInfoList,bOrderInc);
@@ -133,7 +133,7 @@ int CUserInfoTable::GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int i
 	return GetUserInfoData(sql.str().c_str(),userInfoList);
 }
 
-int CUserInfoTable::GetUserInfoAllData(int iPages,int iMaxCount,std::list<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
+int CUserInfoTable::GetUserInfoAllData(int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
 {
 	sqlstring sql;
 	sql<<"select * from UserInfo order by licenseNumber ";
@@ -144,14 +144,14 @@ int CUserInfoTable::GetUserInfoAllData(int iPages,int iMaxCount,std::list<UserTa
 	return GetUserInfoData(sql.str().c_str(),userInfoList);
 }
 
-int CUserInfoTable::GetUserInfoData(const char* lpSql,std::list<UserTableInfo>& userInfoList)
+int CUserInfoTable::GetUserInfoData(const char* lpSql,std::vector<UserTableInfo>& userInfoList)
 {
 	return m_pDbBase->m_dbOp.execute(lpSql,CUserInfoTable::GetUserInfoDataHandle,&userInfoList,NULL);
 }
 
 int CUserInfoTable::GetUserInfoDataHandle(void * lpPara, int nColumn, char ** lppColumnValue, char ** lppColumnName)
 {
-	std::list<UserTableInfo>* pUserList = (std::list<UserTableInfo>*)lpPara;
+	std::vector<UserTableInfo>* pUserList = (std::vector<UserTableInfo>*)lpPara;
 	UserTableInfo tempUserInfo;
 
 	for (int i=0;i<nColumn;++i)
