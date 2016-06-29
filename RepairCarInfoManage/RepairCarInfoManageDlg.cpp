@@ -180,10 +180,11 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BUTTON_BasicSet),_T("基本设置"),IDC_BUTTON_BasicSet,PRect.Width()-ChildRect.Width(),2);
 	pCurrent->AddChild(pChild);
 
-	
-
 	m_root->Show();
 	m_root->Expand();
+
+	OpenDb("repairInfoSave.db");
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 

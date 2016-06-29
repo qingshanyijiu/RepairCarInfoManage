@@ -25,6 +25,11 @@ typedef	struct	tagUserTableInfo
 
 	tagUserTableInfo()
 	{
+		Clear();
+	}
+
+	void Clear()
+	{
 		memset(csLicenseNumber,0,sizeof(csLicenseNumber));
 		memset(csUserName,0,sizeof(csUserName));
 		memset(csUserPhone,0,sizeof(csUserPhone));
@@ -43,6 +48,10 @@ typedef	struct	tagRepairTableInfo
 
 	tagRepairTableInfo()
 	{
+		Clear();
+	}
+
+	void Clear(){
 		memset(csLicenseNumber,0,sizeof(csLicenseNumber));
 		memset(csRepairDate,0,sizeof(csRepairDate));
 		strRepairNotes.clear();

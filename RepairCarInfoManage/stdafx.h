@@ -38,10 +38,11 @@
 #include <afxcontrolbars.h>     // 功能区和控件条的 MFC 支持
 
 
+#include "../RepairCarInfoSaveDB/RepairCarInfoSaveDB.h"
 
-
-
-
+#define	 OPERATE_TYPE_ADD		(0)
+#define  OPERATE_TYPE_MODIFY	(1)
+#define  OPERATE_TYPE_SHOW		(2)
 
 
 

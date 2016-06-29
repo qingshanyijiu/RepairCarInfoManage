@@ -6,3 +6,8 @@
 #include "stdafx.h"
 
 
+#ifdef _DEBUG
+#pragma comment(lib,"../bin/RepairCarInfoSaveDBD.lib")
+#else
+#pragma comment(lib,"../bin/RepairCarInfoSaveDB.lib")
+#endif
