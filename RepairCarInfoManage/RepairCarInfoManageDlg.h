@@ -50,4 +50,8 @@ public:
 	afx_msg void OnBnClickedButtonBasicset();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+
+public:
+	void ShowResultInfo(const char* lpShowInfo);
 };

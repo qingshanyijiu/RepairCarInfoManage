@@ -69,6 +69,7 @@ BEGIN_MESSAGE_MAP(CRepairCarInfoManageDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -144,18 +145,18 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	GetDlgItem(IDC_BTN_USERMNG)->GetWindowRect(&PRect);
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMNG),_T("用户信息管理"),IDC_BTN_USERMNG,0,toppad);	
 	pCurrent->AddChild(pChild);
-	/*pChild->SetBeforeLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::TestBofore, this,std::tr1::placeholders::_1));
-	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::TestAfter, this,std::tr1::placeholders::_1));*/
 	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::AfterButtonClick, this,std::tr1::placeholders::_1));
 	pChild->SetAbsolutePos(true);
 
 	pCurrent = pChild;
 	GetDlgItem(IDC_BTN_USERMODIFY)->GetWindowRect(&ChildRect);
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMODIFY),_T("增加/修改"),IDC_BTN_USERMODIFY,PRect.Width()-ChildRect.Width(),toppad);
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::OnBnClickedBtnUsermodify, this));
 	pCurrent->AddChild(pChild);
 
 	GetDlgItem(IDC_BTN_USERQUERY)->GetWindowRect(&ChildRect);
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERQUERY),_T("查询"),IDC_BTN_USERQUERY,0,toppad);
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::OnBnClickedBtnUserquery, this));
 	pCurrent->AddChild(pChild);
 
 	pCurrent=m_root;
@@ -167,10 +168,12 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	pCurrent = pChild;
 	GetDlgItem(IDC_BTN_MTMODIFY)->GetWindowRect(&ChildRect);
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTMODIFY),_T("增加/修改"),IDC_BTN_MTMODIFY,PRect.Width()-ChildRect.Width(),toppad);
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::OnBnClickedBtnMtmodify, this));
 	pCurrent->AddChild(pChild);
 
 	GetDlgItem(IDC_BTN_MTQUERY)->GetWindowRect(&ChildRect);
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTQUERY),_T("查询"),IDC_BTN_MTQUERY,0,toppad);
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::OnBnClickedBtnMtquery, this));
 	pCurrent->AddChild(pChild);
 
 	pCurrent=m_root;
@@ -182,11 +185,13 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	pCurrent = pChild;
 	GetDlgItem(IDC_BUTTON_BasicSet)->GetWindowRect(&ChildRect);
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BUTTON_BasicSet),_T("基本设置"),IDC_BUTTON_BasicSet,PRect.Width()-ChildRect.Width(),toppad);
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::OnBnClickedButtonBasicset, this));
 	pCurrent->AddChild(pChild);
 
 	m_root->Show();
 	m_root->Expand();
 
+	ShowResultInfo("欢迎使用汽车维护信息管理系统！");
 	OpenDb("repairInfoSave.db");
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -405,4 +410,28 @@ BOOL CRepairCarInfoManageDlg::PreTranslateMessage(MSG* pMsg)
 	// TODO: ÔÚ´ËÌí¼Ó×¨ÓÃ´úÂëºÍ/»òµ÷ÓÃ»ùÀà
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+HBRUSH CRepairCarInfoManageDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  Change any attributes of the DC here
+	switch (pWnd->GetDlgCtrlID())
+	{
+	case IDC_STATIC_ShowResult:
+		pDC->SetTextColor(RGB(255,0,0));
+		break;
+	}
+
+
+
+	// TODO:  Return a different brush if the default is not desired
+	return hbr;
+}
+
+void CRepairCarInfoManageDlg::ShowResultInfo(const char* lpShowInfo)
+{
+	SetDlgItemText(IDC_STATIC_ShowResult,lpShowInfo);
 }
