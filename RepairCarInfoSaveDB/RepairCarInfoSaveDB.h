@@ -82,6 +82,8 @@ int	REPAIRCARINFOSAVEDB_API InsertRepairInfo(PRepairTableInfo	pInfo);
 
 int	REPAIRCARINFOSAVEDB_API UpdateRepairInfo(PRepairTableInfo	pInfo);
 
+int REPAIRCARINFOSAVEDB_API GetRepairInfo(const PRepairTableInfo const pInfo,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bFuzzyQuery=false,bool bOrderInc=true);
+
 int REPAIRCARINFOSAVEDB_API GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
 
 int REPAIRCARINFOSAVEDB_API GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc=true);

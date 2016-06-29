@@ -26,4 +26,10 @@ public:
 	afx_msg void OnSmenuRepairmodify();
 	afx_msg void OnSmenuRepairqueryuser();
 	virtual BOOL OnInitDialog();
+	CListCtrl m_repairinfolist;
+	afx_msg void OnBnClickedBtnMtQrepairinfo();
+	afx_msg void OnBnClickedButtonQuserbefore();
+	afx_msg void OnBnClickedButtonQusernext();
+private:
+	int m_curpage;
 };

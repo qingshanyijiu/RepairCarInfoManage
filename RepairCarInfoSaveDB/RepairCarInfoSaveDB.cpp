@@ -77,6 +77,11 @@ int REPAIRCARINFOSAVEDB_API GetRepairInfoByLicNumber(const char* lpLicNumer,int 
 	return CRepairCarInfoSaveImpl::GetInstance()->GetRepairInfoByLicNumber(lpLicNumer,iPages,iMaxCount,repairInfoList,bOrderInc);
 }
 
+int REPAIRCARINFOSAVEDB_API GetRepairInfo(const PRepairTableInfo const pInfo,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bFuzzyQuery/*=false*/,bool bOrderInc/* =true */)
+{
+	return CRepairCarInfoSaveImpl::GetInstance()->GetRepairInfo(pInfo,iPages,iMaxCount,repairInfoList,bFuzzyQuery,bOrderInc);
+}
+
 int REPAIRCARINFOSAVEDB_API GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	return CRepairCarInfoSaveImpl::GetInstance()->GetRepairInfoByDate(lpDate,iPages,iMaxCount,repairInfoList,bOrderInc);

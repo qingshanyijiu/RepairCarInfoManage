@@ -146,9 +146,13 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	
 	int leftpad =0,toppad =-1;
 	CButtonExd *pCurrent=m_root,*pChild =NULL;
-	CRect PRect,ChildRect;
+	CRect PRect,ChildRect,FuncMenuRC;
 
+	GetDlgItem(IDC_STATIC_FuncMenu)->GetWindowRect(&FuncMenuRC);
+	ScreenToClient(&FuncMenuRC);
+	
 	GetDlgItem(IDC_BTN_USERMNG)->GetWindowRect(&PRect);
+	GetDlgItem(IDC_BTN_USERMNG)->MoveWindow(FuncMenuRC.left,FuncMenuRC.top+20,FuncMenuRC.Width(),PRect.Height());
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMNG),_T("用户信息管理"),IDC_BTN_USERMNG,0,toppad);	
 	pCurrent->AddChild(pChild);
 	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::AfterButtonClick, this,std::tr1::placeholders::_1));
@@ -167,6 +171,7 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 
 	pCurrent=m_root;
 	GetDlgItem(IDC_BTN_MTINFOMNG)->GetWindowRect(&PRect);
+	GetDlgItem(IDC_BTN_USERMNG)->MoveWindow(FuncMenuRC.left,FuncMenuRC.top+20,FuncMenuRC.Width(),PRect.Height());
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTINFOMNG),_T("维护信息管理"),IDC_BTN_MTINFOMNG,0,toppad);	
 	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::AfterButtonClick, this,std::tr1::placeholders::_1));
 	pCurrent->AddChild(pChild);
@@ -184,6 +189,7 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 
 	pCurrent=m_root;
 	GetDlgItem(IDC_BUTTON_SystemSet)->GetWindowRect(&PRect);
+	GetDlgItem(IDC_BTN_USERMNG)->MoveWindow(FuncMenuRC.left,FuncMenuRC.top+20,FuncMenuRC.Width(),PRect.Height());
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BUTTON_SystemSet),_T("系统设置"),IDC_BUTTON_SystemSet,0,toppad);	
 	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::AfterButtonClick, this,std::tr1::placeholders::_1));
 	pCurrent->AddChild(pChild);
@@ -324,9 +330,11 @@ void CRepairCarInfoManageDlg::Expand(int index)
 	if(index<BigMenus-1)
 	{
 		CRect rc = m_root->m_Childs[BigMenus-1]->GetRect();
-		CRect DlgRc;
-		GetClientRect(&DlgRc);
-		int toppad = DlgRc.bottom-rc.bottom;
+		CRect FuncMenuRC;
+
+		GetDlgItem(IDC_STATIC_FuncMenu)->GetWindowRect(&FuncMenuRC);
+		ScreenToClient(&FuncMenuRC);
+		int toppad = FuncMenuRC.bottom-rc.bottom;
 		m_root->m_Childs[index]->Revise(0,toppad);
 	}
 }
@@ -406,6 +414,7 @@ void CRepairCarInfoManageDlg::OnBnClickedBtnMtmodify()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
 	RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
+	((CRepairInfoDlg*)m_pages[IDD_MaintenanceMng_MODIFY_Dlg])->SetOperateType(OPERATE_TYPE_ADD);
 }
 
 

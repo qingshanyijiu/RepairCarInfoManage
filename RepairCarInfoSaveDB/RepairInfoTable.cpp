@@ -88,6 +88,39 @@ int CRepairInfoTable::GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages
 	return GetRepairInfoData(sql.str().c_str(),repairInfoList);
 }
 
+int CRepairInfoTable::GetRepairInfo(const PRepairTableInfo const pInfo,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bFuzzyQuery/*=false*/,bool bOrderInc/* =true */)
+{
+	if (NULL == pInfo)
+		return GetRepairInfoAllData(iPages,iMaxCount,repairInfoList,bOrderInc);
+
+	sqlstring sql;
+	sql<<"select * from RepairInfo where ";
+	const char* lpTableInfoSql = "CREATE TABLE RepairInfo (licenseNumber TEXT ,repairDate TEXT, repairNotes TEXT,repairReserve	TEXT);";
+
+	if(!bFuzzyQuery)
+	{
+		sql<<" licenseNumber ='"<<pInfo->csLicenseNumber<<"' and ";
+		sql<<" repairDate ='"<<pInfo->csRepairDate<<"' and ";
+		sql<<" repairNotes ='"<<pInfo->strRepairNotes.c_str()<<"' and ";
+		sql<<" repairReserve ='"<<pInfo->strRepairReserve.c_str()<<"' ";
+	}
+	else
+	{
+		sql<<" licenseNumber like '%"<<pInfo->csLicenseNumber<<"%' and ";
+		sql<<" repairDate like '%"<<pInfo->csRepairDate<<"%' and ";
+		sql<<" repairNotes like '%"<<pInfo->strRepairNotes.c_str()<<"%' and ";
+		sql<<" repairReserve like '%"<<pInfo->strRepairReserve.c_str()<<"%' ";
+	}
+	
+	sql<<" order by licenseNumber ";
+	if (false == bOrderInc)
+		sql<<"desc ";
+	sql <<" and repairDate ";
+	sql<<"limit "<<iMaxCount<<" offset "<<iMaxCount*iPages<<";";
+
+	return GetRepairInfoData(sql.str().c_str(),repairInfoList);
+}
+
 int CRepairInfoTable::GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == lpDate||0 == strlen(lpDate))

@@ -128,6 +128,14 @@ int CRepairCarInfoSaveImpl::GetRepairInfoByLicNumber(const char* lpLicNumer,int 
 	return m_pRepairTableOp->GetRepairInfoByLicNumber(lpLicNumer,iPages,iMaxCount,repairInfoList,bOrderInc);
 }
 
+int CRepairCarInfoSaveImpl::GetRepairInfo(const PRepairTableInfo const pInfo,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bFuzzyQuery/*=false*/,bool bOrderInc/* =true */)
+{
+	if (NULL == m_pRepairTableOp)
+		return REPAIRCARINFOSAVEDB_ERROR;
+	CCriticalLock::CAutoLock lock(m_dbLock);
+	return m_pRepairTableOp->GetRepairInfo(pInfo,iPages,iMaxCount,repairInfoList,bFuzzyQuery,bOrderInc);
+}
+
 int CRepairCarInfoSaveImpl::GetRepairInfoByDate(const char* lpDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	if (NULL == m_pRepairTableOp)
