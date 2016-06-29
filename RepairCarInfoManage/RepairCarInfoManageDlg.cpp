@@ -241,7 +241,22 @@ void CRepairCarInfoManageDlg::OnPaint()
 	}
 	else
 	{
-		CDialogEx::OnPaint();
+		//CDialogEx::OnPaint();
+		CPaintDC   dc(this);   
+		CRect   rect;   
+		GetClientRect(&rect);   
+		CDC   dcMem;   
+		dcMem.CreateCompatibleDC(&dc);   
+		CBitmap   bmpBackground;   
+		bmpBackground.LoadBitmap(IDB_BITMAP_background);   //IDB_BITMAP是你自己的图对应的ID   ，由于我刚刚加入的位图资源 
+		//被我命名成了IDB_Bg，因而我这句就是bmpBackground.LoadBitmap(IDB_Bg);  
+
+		BITMAP   bitmap;   
+		bmpBackground.GetBitmap(&bitmap);   
+		CBitmap   *pbmpOld=dcMem.SelectObject(&bmpBackground);   
+		dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,   
+			bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+
 	}
 }
 

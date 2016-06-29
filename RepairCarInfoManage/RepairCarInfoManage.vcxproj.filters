@@ -22,6 +22,9 @@
     <None Include="res\RepairCarInfoManage.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\background_Car.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RepairCarInfoManage.h">

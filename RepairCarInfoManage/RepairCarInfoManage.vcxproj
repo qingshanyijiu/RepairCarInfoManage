@@ -98,6 +98,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+    <None Include="res\background_Car.bmp" />
     <None Include="res\RepairCarInfoManage.ico" />
     <None Include="res\RepairCarInfoManage.rc2" />
   </ItemGroup>
