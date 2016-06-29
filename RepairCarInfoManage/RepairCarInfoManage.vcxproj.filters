@@ -42,13 +42,13 @@
     <ClInclude Include="MaintenanceMngDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UserMngDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ButtonExd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UserMngQueryDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInfoDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,13 +65,13 @@
     <ClCompile Include="MaintenanceMngDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UserMngDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ButtonExd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UserMngQueryDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInfoDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
