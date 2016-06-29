@@ -137,47 +137,51 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	ShowParamDlg(pWnd,FALSE);
 	m_pages[IDD_SYSSET_BASIC_DLG] = pWnd;
 	
-	int leftpad =0,toppad =0;
+	int leftpad =0,toppad =-1;
 	CButtonExd *pCurrent=m_root,*pChild =NULL;
 	CRect PRect,ChildRect;
+
 	GetDlgItem(IDC_BTN_USERMNG)->GetWindowRect(&PRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMNG),_T("用户信息管理"),IDC_BTN_USERMNG,0,2);	
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMNG),_T("用户信息管理"),IDC_BTN_USERMNG,0,toppad);	
 	pCurrent->AddChild(pChild);
-	pChild->SetBeforeLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::TestBofore, this));
-	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::TestAfter, this));
+	/*pChild->SetBeforeLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::TestBofore, this,std::tr1::placeholders::_1));
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::TestAfter, this,std::tr1::placeholders::_1));*/
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::AfterButtonClick, this,std::tr1::placeholders::_1));
 	pChild->SetAbsolutePos(true);
 
 	pCurrent = pChild;
 	GetDlgItem(IDC_BTN_USERMODIFY)->GetWindowRect(&ChildRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMODIFY),_T("增加/修改"),IDC_BTN_USERMODIFY,PRect.Width()-ChildRect.Width(),2);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERMODIFY),_T("增加/修改"),IDC_BTN_USERMODIFY,PRect.Width()-ChildRect.Width(),toppad);
 	pCurrent->AddChild(pChild);
 
 	GetDlgItem(IDC_BTN_USERQUERY)->GetWindowRect(&ChildRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERQUERY),_T("查询"),IDC_BTN_USERQUERY,0,2);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_USERQUERY),_T("查询"),IDC_BTN_USERQUERY,0,toppad);
 	pCurrent->AddChild(pChild);
 
 	pCurrent=m_root;
 	GetDlgItem(IDC_BTN_MTINFOMNG)->GetWindowRect(&PRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTINFOMNG),_T("维护信息管理"),IDC_BTN_MTINFOMNG,0,2);	
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTINFOMNG),_T("维护信息管理"),IDC_BTN_MTINFOMNG,0,toppad);	
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::AfterButtonClick, this,std::tr1::placeholders::_1));
 	pCurrent->AddChild(pChild);
 
 	pCurrent = pChild;
 	GetDlgItem(IDC_BTN_MTMODIFY)->GetWindowRect(&ChildRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTMODIFY),_T("增加/修改"),IDC_BTN_MTMODIFY,PRect.Width()-ChildRect.Width(),2);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTMODIFY),_T("增加/修改"),IDC_BTN_MTMODIFY,PRect.Width()-ChildRect.Width(),toppad);
 	pCurrent->AddChild(pChild);
 
 	GetDlgItem(IDC_BTN_MTQUERY)->GetWindowRect(&ChildRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTQUERY),_T("查询"),IDC_BTN_MTQUERY,0,2);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BTN_MTQUERY),_T("查询"),IDC_BTN_MTQUERY,0,toppad);
 	pCurrent->AddChild(pChild);
 
 	pCurrent=m_root;
 	GetDlgItem(IDC_BUTTON_SystemSet)->GetWindowRect(&PRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BUTTON_SystemSet),_T("系统设置"),0,2);	
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BUTTON_SystemSet),_T("系统设置"),IDC_BUTTON_SystemSet,0,toppad);	
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::AfterButtonClick, this,std::tr1::placeholders::_1));
 	pCurrent->AddChild(pChild);
 
 	pCurrent = pChild;
 	GetDlgItem(IDC_BUTTON_BasicSet)->GetWindowRect(&ChildRect);
-	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BUTTON_BasicSet),_T("基本设置"),IDC_BUTTON_BasicSet,PRect.Width()-ChildRect.Width(),2);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BUTTON_BasicSet),_T("基本设置"),IDC_BUTTON_BasicSet,PRect.Width()-ChildRect.Width(),toppad);
 	pCurrent->AddChild(pChild);
 
 	m_root->Show();
@@ -252,13 +256,22 @@ BOOL CRepairCarInfoManageDlg::ShowParamDlg(CWnd* pWnd, BOOL bShow)
 	return pWnd->ShowWindow(bShow ? SW_SHOW : SW_HIDE);
 }
 
-void CRepairCarInfoManageDlg::TestBofore()
+void CRepairCarInfoManageDlg::TestBofore(void * p)
 {
+	CButtonExd* pButtonexd = (CButtonExd*)p;
 	MessageBox(_T("before"));
+	MessageBox(pButtonexd->GetName());
 }
-void CRepairCarInfoManageDlg::TestAfter()
+void CRepairCarInfoManageDlg::TestAfter(void* p)
 {
 	MessageBox(_T("after"));
+}
+
+void CRepairCarInfoManageDlg::AfterButtonClick(void * p)
+{
+	CButtonExd* pButtonexd = (CButtonExd*)p;
+	if(pButtonexd->IsExpand())
+		Expand(pButtonexd->GetIndex());
 }
 
 
@@ -271,9 +284,10 @@ void CRepairCarInfoManageDlg::Expand(int index)
 		return;
 	if( !m_root->m_Childs[index]->IsShow())
 		return;
+/*
 	if(m_root->m_Childs[index]->IsExpand())
 		return;
-	m_root->m_Childs[index]->Expand();
+	m_root->m_Childs[index]->Expand();*/
 	for (int i=BigMenus-1;i>=0;--i)
 	{
 		if(i!=index)
@@ -379,11 +393,8 @@ void CRepairCarInfoManageDlg::OnBnClickedButtonBasicset()
 BOOL CRepairCarInfoManageDlg::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// TODO: ÔÚ´ËÌí¼Ó×¨ÓÃ´úÂëºÍ/»òµ÷ÓÃ»ùÀà
-	if( (LOWORD(wParam) >= 1000 ) && (LOWORD(wParam) <= 1100 )) 
-	{ 
-		if(CButtonExd::OnCommond(m_root,wParam,lParam))
-			return true; 
-	} 
+	if(CButtonExd::OnCommond(m_root,wParam,lParam))
+		return true; 
 
 	return CDialogEx::OnCommand(wParam, lParam);
 }

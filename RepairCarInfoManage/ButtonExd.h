@@ -2,8 +2,8 @@
 #include <vector>
 #include <map>
 #include <functional>
-
-typedef std::tr1::function<void()> LBClickCallbackFunc;
+class CButtonExd;
+typedef std::tr1::function<void(CButtonExd*)> LBClickCallbackFunc;
 typedef LBClickCallbackFunc BeforeLBClickDealFunc;
 typedef LBClickCallbackFunc AfterLBClickDealFunc;
 class CButtonExd
@@ -79,6 +79,11 @@ public:
 	CRect GetRect()
 	{
 		return m_rc;
+	}
+
+	int GetIndex()
+	{
+		return m_index;
 	}
 private:
 	bool AddToBtnMap(long ID,CButtonExd* pBtn);

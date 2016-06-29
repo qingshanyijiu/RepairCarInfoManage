@@ -30,8 +30,9 @@ protected:
 	HICON m_hIcon;
 	void Expand(int index);
 	void RightPageShow(long DLGID);
-	void TestBofore();
-	void TestAfter();
+	void AfterButtonClick(void*);
+	void TestBofore(void* );
+	void TestAfter(void*);
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);

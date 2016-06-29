@@ -225,13 +225,13 @@ CRect CButtonExd::Folded()
 bool CButtonExd::OnLBClick()
 {
 	if(m_BeforeLBClickDealFunc)
-		m_BeforeLBClickDealFunc();
+		m_BeforeLBClickDealFunc(this);
 	if(m_bExpand)
 		Folded();
 	else
 		Expand();
 	if(m_AfterLBClickDealFunc)
-		m_AfterLBClickDealFunc();
+		m_AfterLBClickDealFunc(this);
 	return true;
 }
 
