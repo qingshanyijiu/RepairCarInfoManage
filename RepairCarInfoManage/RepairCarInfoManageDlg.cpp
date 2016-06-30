@@ -138,6 +138,7 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	pWnd->Create(IDD_MaintenanceMng_QUERY_Dlg,this);
 	ShowParamDlg(pWnd,FALSE);
 	m_pages[IDD_MaintenanceMng_QUERY_Dlg] = pWnd;
+	((CRepairInfoQueryDlg*)pWnd)->m_parent = this;
 	//增加/修改
 	pWnd = new CRepairInfoDlg();
 	pWnd->Create(IDD_MaintenanceMng_MODIFY_Dlg,this);

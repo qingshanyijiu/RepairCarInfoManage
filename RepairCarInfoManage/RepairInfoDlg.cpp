@@ -5,6 +5,7 @@
 #include "RepairCarInfoManage.h"
 #include "RepairInfoDlg.h"
 #include "afxdialogex.h"
+#include "RepairCarInfoManageDlg.h"
 
 
 // CRepairInfoDlg dialog
@@ -56,11 +57,25 @@ void CRepairInfoDlg::OnBnClickedBtnRepairadd()
 
 	if (OPERATE_TYPE_ADD == m_bOperateType)
 	{
-		InsertRepairInfo(&m_repairInfo);
+		if(0 == InsertRepairInfo(&m_repairInfo))
+		{
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息增加成功！");
+		}
+		else
+		{
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息增加失败！");
+		}
 	}
 	else if (OPERATE_TYPE_MODIFY == m_bOperateType)
 	{
-		UpdateRepairInfo(&m_repairInfo);
+		if(0 == UpdateRepairInfo(&m_repairInfo))
+		{
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息修改成功！");
+		}
+		else
+		{
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息修改失败！");
+		}
 	}
 }
 
@@ -69,6 +84,8 @@ void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
 	m_RepairLicNumber.SetReadOnly(FALSE);
 	m_bOperateType = bType;
 	m_repairInfo.Clear();
+	if(pInfo != NULL)
+		m_repairInfo.Copy(*pInfo);
 	switch(bType)
 	{
 	case OPERATE_TYPE_ADD:

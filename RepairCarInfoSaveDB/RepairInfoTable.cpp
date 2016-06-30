@@ -61,7 +61,12 @@ int	CRepairInfoTable::UpdateRepairInfo(PRepairTableInfo	pInfo)
 	sqlstring sql;
 
 	sql<<"update RepairInfo set ";
-
+	sql<<"licenseNumber='"<<pInfo->csLicenseNumber<<"',";
+	sql<<"repairDate='"<<pInfo->csRepairDate<<"',";
+	sql<<"repairNotes='"<<pInfo->strRepairNotes<<"',";
+	sql<<"repairReserve='"<<pInfo->strRepairReserve<<"'";
+	sql<<" where id="<<pInfo->iID;
+	/*
 	if (pInfo->strRepairNotes.size())
 	{
 		sql<<"repairNotes='"<<pInfo->strRepairNotes<<"'";
@@ -77,7 +82,7 @@ int	CRepairInfoTable::UpdateRepairInfo(PRepairTableInfo	pInfo)
 	}
 
 	sql<<" where licenseNumber='"<<pInfo->csLicenseNumber<<"'";
-	sql<<" and repairDate='"<<pInfo->csRepairDate<<"';";
+	sql<<" and repairDate='"<<pInfo->csRepairDate<<"';";*/
 
 	iRes = m_pDbBase->m_dbOp.execute(sql.str().c_str(), NULL, NULL, NULL);
 
@@ -175,6 +180,19 @@ int	CRepairInfoTable::DeleteRepairInfoByLicNumber(const char* lpLicNumer)
 	return iRes;
 }
 
+int	CRepairInfoTable::DeleteRepairInfoByID(int id)
+{
+	int iRes = SQLITE_OK;
+	sqlstring sql;
+
+	sql<<"delete from RepairInfo where id=";
+	sql<<id<<";";
+
+	iRes = m_pDbBase->m_dbOp.execute(sql.str().c_str(), NULL, NULL, NULL);
+
+	return iRes;
+}
+
 int CRepairInfoTable::GetRepairInfoAllData(int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc/*=true*/)
 {
 	sqlstring sql;
@@ -198,6 +216,12 @@ int CRepairInfoTable::GetRepairInfoDataHandle(void * lpPara, int nColumn, char *
 
 	for (int i=0;i<nColumn;++i)
 	{
+		if (0== strcmp(lppColumnName[i],"id"))
+		{
+			tempInfo.iID = atoi(lppColumnValue[i]);
+			continue;
+		}
+
 		if (0== strcmp(lppColumnName[i],"licenseNumber"))
 		{
 			strcpy(tempInfo.csLicenseNumber,lppColumnValue[i]);

@@ -59,6 +59,14 @@ typedef	struct	tagRepairTableInfo
 		strRepairNotes.clear();
 		strRepairReserve.clear();
 	}
+
+	void Copy(tagRepairTableInfo& info){
+		iID = info.iID;
+		strncpy(csLicenseNumber,info.csLicenseNumber,16);
+		strncpy(csRepairDate,info.csRepairDate,16);
+		strRepairNotes = info.strRepairNotes;
+		strRepairReserve = info.strRepairReserve;
+	}
 }RepairTableInfo,*PRepairTableInfo;
 
 
@@ -93,6 +101,8 @@ int REPAIRCARINFOSAVEDB_API GetRepairInfoByDate(const char* lpDate,int iPages,in
 int REPAIRCARINFOSAVEDB_API GetRepairInfoByDateRange(const char* lpBeinDate,const char* lpEndDate,int iPages,int iMaxCount,std::vector<RepairTableInfo>& repairInfoList,bool bOrderInc=true);
 
 int	REPAIRCARINFOSAVEDB_API DeleteRepairInfoByLicNumber(const char* lpLicNumer);
+
+int	REPAIRCARINFOSAVEDB_API DeleteRepairInfoByID(int id);
 
 
 
