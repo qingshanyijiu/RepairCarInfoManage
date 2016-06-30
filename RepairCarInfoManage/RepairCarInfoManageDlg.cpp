@@ -18,6 +18,11 @@
 #endif
 
 #define  BTN_ROOT 0
+static CRepairCarInfoManageDlg*	g_this = NULL;
+
+
+
+
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialogEx
@@ -64,6 +69,8 @@ CRepairCarInfoManageDlg::CRepairCarInfoManageDlg(CWnd* pParent /*=NULL*/)
 	m_pCurrentWnd = NULL;
 	m_root = new CButtonExd();
 	m_root->InitBtnMap();
+
+	g_this = this;
 }
 
 void CRepairCarInfoManageDlg::DoDataExchange(CDataExchange* pDX)
@@ -248,8 +255,8 @@ void CRepairCarInfoManageDlg::OnPaint()
 	}
 	else
 	{
-		//CDialogEx::OnPaint();
-		CPaintDC   dc(this);   
+		CDialogEx::OnPaint();
+		/*CPaintDC   dc(this);   
 		CRect   rect;   
 		GetClientRect(&rect);   
 		CDC   dcMem;   
@@ -262,7 +269,7 @@ void CRepairCarInfoManageDlg::OnPaint()
 		bmpBackground.GetBitmap(&bitmap);   
 		CBitmap   *pbmpOld=dcMem.SelectObject(&bmpBackground);   
 		dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcMem,0,0,   
-			bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   
+			bitmap.bmWidth,bitmap.bmHeight,SRCCOPY);   */
 
 	}
 }
@@ -465,4 +472,8 @@ HBRUSH CRepairCarInfoManageDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CRepairCarInfoManageDlg::ShowResultInfo(const char* lpShowInfo)
 {
 	SetDlgItemText(IDC_STATIC_ShowResult,lpShowInfo);
+}
+void CRepairCarInfoManageDlg::ShowOperateInfo(const char* lpShowInfo)
+{
+	g_this->ShowResultInfo(lpShowInfo);
 }

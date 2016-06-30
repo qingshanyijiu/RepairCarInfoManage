@@ -43,7 +43,7 @@
 #define	 OPERATE_TYPE_ADD		(0)
 #define  OPERATE_TYPE_MODIFY	(1)
 #define  OPERATE_TYPE_SHOW		(2)
-
+#define  MAX_QUERY_COUNT		(15)
 
 
 #ifdef _UNICODE

@@ -1,7 +1,10 @@
 #pragma once
-
+#include <vector>
+#include <string>
+using namespace std;
 
 // CUserMngQueryDlg ¶Ô»°¿ò
+typedef int (*pQueryfunc)(const char* lpLicNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc);
 
 class CUserMngQueryDlg : public CDialogEx
 {
@@ -29,6 +32,15 @@ public:
 	CButton m_QUserNextButton;
 	CListCtrl m_userList;
 //	afx_msg void OnLvnItemchangedListUserlist(NMHDR *pNMHDR, LRESULT *pResult);
+
+public:
+	int						m_curPageIndex;
+	pQueryfunc				m_pQueryFunc;
+	string					m_strQueryKey;
+	vector<UserTableInfo>	m_userInfoVect;
+
+public:
+	void	UpdateDataInfo();
 
 public:
 

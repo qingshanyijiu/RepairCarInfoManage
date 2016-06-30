@@ -41,7 +41,7 @@ typedef	struct	tagUserTableInfo
 
 typedef	struct	tagRepairTableInfo
 {
-	int iID;
+	int			iID;
 	char		csLicenseNumber[16];
 	char		csRepairDate[16];		//YYYY-MM-DD
 	std::string	strRepairNotes;
