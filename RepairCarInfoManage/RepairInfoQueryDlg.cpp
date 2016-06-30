@@ -7,6 +7,9 @@
 #include "afxdialogex.h"
 #include "RepairCarInfoManageDlg.h"
 #include "RepairInfoDlg.h"
+#include "UserMngQueryDlg.h"
+
+extern CRepairCarInfoManageDlg*	g_pMainDlg;
 
 // CRepairInfoQueryDlg dialog
 
@@ -16,7 +19,6 @@ CRepairInfoQueryDlg::CRepairInfoQueryDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CRepairInfoQueryDlg::IDD, pParent)
 {
 	m_curpage = 0;
-	m_parent = NULL;
 }
 
 CRepairInfoQueryDlg::~CRepairInfoQueryDlg()
@@ -84,14 +86,14 @@ void CRepairInfoQueryDlg::OnDblclkListRepairlist(NMHDR *pNMHDR, LRESULT *pResult
 void CRepairInfoQueryDlg::OnSmenuRepairdelete()
 {
 	// TODO: Add your command handler code here
+	int selectIndex = m_repairinfolist.GetSelectionMark();
+	if(selectIndex<0)
+		return;
+
 	if(IDYES== MessageBox("是否删除当前选中的维修信息?","提示",MB_YESNO))
 	{
-		int selectIndex = m_repairinfolist.GetSelectionMark();
-		if(selectIndex<0)
-			return;
 		int iID = atoi(m_repairinfolist.GetItemText(selectIndex,4));
-		int ret = DeleteRepairInfoByID(iID);
-		if(ret == 0)
+		if(REPAIRCARINFOSAVEDB_SUCCESS == DeleteRepairInfoByID(iID))
 		{
 			m_repairinfolist.DeleteItem(selectIndex);
 			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息删除成功！");
@@ -108,7 +110,7 @@ void CRepairInfoQueryDlg::OnSmenuRepairdelete()
 void CRepairInfoQueryDlg::OnSmenuRepairdetail()
 {
 	// TODO: Add your command handler code here
-	if(m_parent == NULL || m_repairinfolist.GetSelectedCount()<=0)
+	if(g_pMainDlg == NULL || m_repairinfolist.GetSelectedCount()<=0)
 		return;
 	int selectIndex = m_repairinfolist.GetSelectionMark();
 	RepairTableInfo rinfo;
@@ -117,8 +119,8 @@ void CRepairInfoQueryDlg::OnSmenuRepairdetail()
 	strncpy(rinfo.csRepairDate,m_repairinfolist.GetItemText(selectIndex,1).operator LPCSTR(),16);
 	rinfo.strRepairNotes = m_repairinfolist.GetItemText(selectIndex,2).operator LPCSTR();
 	rinfo.strRepairReserve = m_repairinfolist.GetItemText(selectIndex,3).operator LPCSTR();
-	((CRepairInfoDlg*)(m_parent->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_SHOW,&rinfo);
-	m_parent->RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
+	((CRepairInfoDlg*)(g_pMainDlg->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_SHOW,&rinfo);
+	g_pMainDlg->RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
 	CRepairCarInfoManageDlg::ShowOperateInfo("维修信息 - 详细内容！");
 }
 
@@ -126,7 +128,7 @@ void CRepairInfoQueryDlg::OnSmenuRepairdetail()
 void CRepairInfoQueryDlg::OnSmenuRepairmodify()
 {
 	// TODO: Add your command handler code here
-	if(m_parent == NULL || m_repairinfolist.GetSelectedCount()<=0)
+	if(g_pMainDlg == NULL || m_repairinfolist.GetSelectedCount()<=0)
 		return;
 	int selectIndex = m_repairinfolist.GetSelectionMark();
 	RepairTableInfo rinfo;
@@ -135,8 +137,8 @@ void CRepairInfoQueryDlg::OnSmenuRepairmodify()
 	strncpy(rinfo.csRepairDate,m_repairinfolist.GetItemText(selectIndex,1).operator LPCSTR(),16);
 	rinfo.strRepairNotes = m_repairinfolist.GetItemText(selectIndex,2).operator LPCSTR();
 	rinfo.strRepairReserve = m_repairinfolist.GetItemText(selectIndex,3).operator LPCSTR();
-	((CRepairInfoDlg*)(m_parent->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_MODIFY,&rinfo);
-	m_parent->RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
+	((CRepairInfoDlg*)(g_pMainDlg->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_MODIFY,&rinfo);
+	g_pMainDlg->RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
 	CRepairCarInfoManageDlg::ShowOperateInfo("维修信息 - 修改！");
 }
 
@@ -144,6 +146,13 @@ void CRepairInfoQueryDlg::OnSmenuRepairmodify()
 void CRepairInfoQueryDlg::OnSmenuRepairqueryuser()
 {
 	// TODO: Add your command handler code here
+	if(g_pMainDlg == NULL || m_repairinfolist.GetSelectedCount()<=0)
+		return;
+
+	int selectIndex = m_repairinfolist.GetSelectionMark();
+	((CUserMngQueryDlg*)(g_pMainDlg->m_pages[IDD_USERMNG_QUERY_DLG]))->QueryUserInfoByLicNumber(m_repairInfoVect[selectIndex].csLicenseNumber);
+	g_pMainDlg->RightPageShow(IDD_USERMNG_QUERY_DLG);
+	CRepairCarInfoManageDlg::ShowOperateInfo("车主信息 - 详细内容！");
 }
 
 
@@ -204,6 +213,14 @@ void CRepairInfoQueryDlg::OnBnClickedBtnMtQrepairinfo()
 		CRepairCarInfoManageDlg::ShowOperateInfo("没有查询到对应的维修信息！");
 }
 
+void CRepairInfoQueryDlg::QueryRepairInfoByLicNumber(const char* lpLicNumber)
+{
+	SetDlgItemText(IDC_EDIT_QrepairLicNumber,lpLicNumber);
+	SetDlgItemText(IDC_EDIT_QrepairDate,"");
+
+	OnBnClickedBtnMtQrepairinfo();
+}
+
 
 void CRepairInfoQueryDlg::OnBnClickedButtonQuserbefore()
 {
@@ -246,6 +263,13 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQuserbefore()
 void CRepairInfoQueryDlg::OnBnClickedButtonQusernext()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
+	if(m_repairInfoVect.size()<MAX_QUERY_COUNT)
+	{
+		CRepairCarInfoManageDlg::ShowOperateInfo("没有下一页了，查询失败！");
+		return;
+	}
+
+
 	CString	strTemp;
 	RepairTableInfo rinfo;
 
@@ -299,4 +323,25 @@ void	CRepairInfoQueryDlg::UpdateDataInfo()
 	m_repairinfolist.SetRedraw(TRUE);
 	m_repairinfolist.Invalidate();
 	m_repairinfolist.UpdateWindow();
+}
+
+BOOL CRepairInfoQueryDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	// 把Esc和Enter按键事件消息过滤掉，否则该消息会导致对应应用程序调用OnOK（）方法，结束应用程序
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		switch(pMsg->wParam)
+		{
+		case VK_ESCAPE: //Esc按键事件
+			return true;
+		case VK_RETURN: //Enter按键事件
+			OnBnClickedBtnMtQrepairinfo();
+			return true;
+		default:
+			;
+		}
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

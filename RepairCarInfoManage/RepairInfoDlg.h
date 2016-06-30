@@ -29,4 +29,5 @@ public:
 	CEdit m_RepairReserve;
 	CButton m_AddModifyButton;
 	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

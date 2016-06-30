@@ -37,4 +37,6 @@ public:
 	CEdit m_userNameEdit;
 	CEdit m_userPhoneEdit;
 	CEdit m_userReserveEdit;
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual void PreInitDialog();
 };

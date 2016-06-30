@@ -7,6 +7,7 @@
 #include "afxdialogex.h"
 #include "RepairCarInfoManageDlg.h"
 
+extern CRepairCarInfoManageDlg*	g_pMainDlg;
 
 // CRepairInfoDlg dialog
 
@@ -77,6 +78,10 @@ void CRepairInfoDlg::OnBnClickedBtnRepairadd()
 			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息修改失败！");
 		}
 	}
+	else
+	{
+		g_pMainDlg->RightPageShow(IDD_MaintenanceMng_QUERY_Dlg);
+	}
 }
 
 void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
@@ -96,7 +101,6 @@ void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
 			SetDlgItemText(IDC_EDIT_RepairReserve,"");
 
 			m_AddModifyButton.SetWindowText("增加");
-			m_AddModifyButton.ShowWindow(SW_SHOW);
 			m_repairInfo.Clear();
 		}
 		break;
@@ -112,11 +116,10 @@ void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
 		{
 			m_RepairLicNumber.SetReadOnly(TRUE);
 			m_AddModifyButton.SetWindowText("修改");
-			m_AddModifyButton.ShowWindow(SW_SHOW);
 		}
 		else
 		{
-			m_AddModifyButton.ShowWindow(SW_HIDE);
+			m_AddModifyButton.SetWindowText("返回");
 		}
 
 		break;
@@ -132,4 +135,25 @@ BOOL CRepairInfoDlg::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// Òì³£: OCX ÊôÐÔÒ³Ó¦·µ»Ø FALSE
+}
+
+
+BOOL CRepairInfoDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	// 把Esc和Enter按键事件消息过滤掉，否则该消息会导致对应应用程序调用OnOK（）方法，结束应用程序
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		switch(pMsg->wParam)
+		{
+		case VK_ESCAPE: //Esc按键事件
+			return true;
+		case VK_RETURN: //Enter按键事件
+			return true;
+		default:
+			;
+		}
+	}
+	
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

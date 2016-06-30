@@ -41,6 +41,7 @@ public:
 
 public:
 	void	UpdateDataInfo();
+	void	QueryUserInfoByLicNumber(const char* lpLicNumber);	
 
 public:
 
@@ -50,4 +51,5 @@ public:
 	afx_msg void OnSmenuUserdetail();
 	afx_msg void OnSmenuUsermodify();
 	afx_msg void OnSmenuUserqueryrepair();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

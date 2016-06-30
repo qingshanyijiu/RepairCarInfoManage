@@ -6,7 +6,10 @@
 #include "UserMngQueryDlg.h"
 #include "afxdialogex.h"
 #include "RepairCarInfoManageDlg.h"
+#include "UserInfoDlg.h"
+#include "RepairInfoQueryDlg.h"
 
+extern CRepairCarInfoManageDlg*	g_pMainDlg;
 
 // CUserMngQueryDlg 对话框
 
@@ -205,6 +208,7 @@ void CUserMngQueryDlg::OnBnClickedButtonQuserbefore()
 		}
 		else
 		{
+			++m_curPageIndex;
 			CRepairCarInfoManageDlg::ShowOperateInfo("查询上一页失败！");
 		}
 	}
@@ -218,7 +222,7 @@ void CUserMngQueryDlg::OnBnClickedButtonQuserbefore()
 void CUserMngQueryDlg::OnBnClickedButtonQusernext()
 {
 	// TODO: Add your control notification handler code here
-	if (m_userInfoVect.size()<MAX_QUERY_COUNT)
+	if (m_userInfoVect.size()>=MAX_QUERY_COUNT)
 	{
 		m_userInfoVect.clear();
 		++m_curPageIndex;
@@ -233,6 +237,7 @@ void CUserMngQueryDlg::OnBnClickedButtonQusernext()
 		}
 		else
 		{
+			--m_curPageIndex;
 			CRepairCarInfoManageDlg::ShowOperateInfo("查询下一页失败！");
 		}
 	}
@@ -268,6 +273,8 @@ void CUserMngQueryDlg::OnDblclkListUserlist(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	// TODO: Add your control notification handler code here
+	OnSmenuUserdetail();
+
 	*pResult = 0;
 }
 
@@ -275,25 +282,72 @@ void CUserMngQueryDlg::OnDblclkListUserlist(NMHDR *pNMHDR, LRESULT *pResult)
 void CUserMngQueryDlg::OnSmenuUserdelete()
 {
 	// TODO: Add your command handler code here
-	AfxMessageBox("Dele");
+	int selectIndex = m_userList.GetSelectionMark();
+	if(selectIndex<0)
+		return;
+
+	if(IDYES== MessageBox("是否删除当前选中的维修信息?","提示",MB_YESNO))
+	{
+		CString strTemp = m_userList.GetItemText(selectIndex,0);
+		if(REPAIRCARINFOSAVEDB_SUCCESS ==  DeleteUserInfoByLicNumber(strTemp.operator LPCSTR()))
+		{
+			m_userList.DeleteItem(selectIndex);
+			CRepairCarInfoManageDlg::ShowOperateInfo("车主信息删除成功！");
+		}
+		else
+		{
+			CRepairCarInfoManageDlg::ShowOperateInfo("车主信息删除失败！");
+		}
+
+	}
 }
 
 
 void CUserMngQueryDlg::OnSmenuUserdetail()
 {
 	// TODO: Add your command handler code here
+	if(g_pMainDlg == NULL || m_userList.GetSelectedCount()<=0)
+		return;
+
+	int selectIndex = m_userList.GetSelectionMark();
+	((CUserInfoDlg*)(g_pMainDlg->m_pages[IDD_USERMNG_MODIFY_DLG]))->SetOperateType(OPERATE_TYPE_SHOW,&m_userInfoVect[selectIndex]);
+	g_pMainDlg->RightPageShow(IDD_USERMNG_MODIFY_DLG);
+	CRepairCarInfoManageDlg::ShowOperateInfo("车主信息 - 详细内容！");
 }
 
 
 void CUserMngQueryDlg::OnSmenuUsermodify()
 {
 	// TODO: Add your command handler code here
+	if(g_pMainDlg == NULL || m_userList.GetSelectedCount()<=0)
+		return;
+
+	int selectIndex = m_userList.GetSelectionMark();
+	((CUserInfoDlg*)(g_pMainDlg->m_pages[IDD_USERMNG_MODIFY_DLG]))->SetOperateType(OPERATE_TYPE_MODIFY,&m_userInfoVect[selectIndex]);
+	g_pMainDlg->RightPageShow(IDD_USERMNG_MODIFY_DLG);
+	CRepairCarInfoManageDlg::ShowOperateInfo("车主信息 - 详细内容！");
+}
+
+void CUserMngQueryDlg::QueryUserInfoByLicNumber(const char* lpLicNumber)
+{
+	SetDlgItemText(IDC_EDIT_QuserLicNumber,lpLicNumber);
+	SetDlgItemText(IDC_EDIT_QuserName,"");
+	SetDlgItemText(IDC_EDIT_QuserPhone,"");
+
+	OnBnClickedBtnUserUserquery();
 }
 
 
 void CUserMngQueryDlg::OnSmenuUserqueryrepair()
 {
 	// TODO: Add your command handler code here
+	if(g_pMainDlg == NULL || m_userList.GetSelectedCount()<=0)
+		return;
+
+	int selectIndex = m_userList.GetSelectionMark();
+	((CRepairInfoQueryDlg*)(g_pMainDlg->m_pages[IDD_MaintenanceMng_QUERY_Dlg]))->QueryRepairInfoByLicNumber(m_userInfoVect[selectIndex].csLicenseNumber);
+	g_pMainDlg->RightPageShow(IDD_MaintenanceMng_QUERY_Dlg);
+	CRepairCarInfoManageDlg::ShowOperateInfo("修车信息 - 详细内容！");
 }
 
 void CUserMngQueryDlg::UpdateDataInfo()
@@ -315,4 +369,25 @@ void CUserMngQueryDlg::UpdateDataInfo()
 	m_userList.SetRedraw(TRUE);
 	m_userList.Invalidate();
 	m_userList.UpdateWindow();
+}
+
+BOOL CUserMngQueryDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	// 把Esc和Enter按键事件消息过滤掉，否则该消息会导致对应应用程序调用OnOK（）方法，结束应用程序
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		switch(pMsg->wParam)
+		{
+		case VK_ESCAPE: //Esc按键事件
+			return true;
+		case VK_RETURN: //Enter按键事件
+			OnBnClickedBtnUserUserquery();
+			return true;
+		default:
+			;
+		}
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

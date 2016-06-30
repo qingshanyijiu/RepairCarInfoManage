@@ -7,6 +7,7 @@
 #include "afxdialogex.h"
 #include "RepairCarInfoManageDlg.h"
 
+extern CRepairCarInfoManageDlg*	g_pMainDlg;
 
 // CUserInfoDlg dialog
 
@@ -81,6 +82,10 @@ void CUserInfoDlg::OnBnClickedBtnUserAdd()
 			CRepairCarInfoManageDlg::ShowOperateInfo("修改车主信息失败！可能是无该记录！");
 		}
 	}
+	else
+	{
+		g_pMainDlg->RightPageShow(IDD_USERMNG_QUERY_DLG);
+	}
 }
 
 
@@ -101,7 +106,6 @@ void CUserInfoDlg::SetOperateType(BYTE bType,PUserTableInfo pInfo/*=NULL*/)
 			SetDlgItemText(IDC_EDIT_userReserve,"");
 
 			m_addMotifyButton.SetWindowText("增加");
-			m_addMotifyButton.ShowWindow(SW_SHOW);
 		}
 		break;
 	case OPERATE_TYPE_MODIFY:
@@ -117,13 +121,40 @@ void CUserInfoDlg::SetOperateType(BYTE bType,PUserTableInfo pInfo/*=NULL*/)
 		{
 			m_userLicNumberEdit.SetReadOnly(TRUE);
 			m_addMotifyButton.SetWindowText("修改");
-			m_addMotifyButton.ShowWindow(SW_SHOW);
 		}
 		else
 		{
-			m_addMotifyButton.ShowWindow(SW_HIDE);
+			m_addMotifyButton.SetWindowText("返回");
 		}
 		
 		break;
 	}
+}
+
+BOOL CUserInfoDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	// 把Esc和Enter按键事件消息过滤掉，否则该消息会导致对应应用程序调用OnOK（）方法，结束应用程序
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		switch(pMsg->wParam)
+		{
+		case VK_ESCAPE: //Esc按键事件
+			return true;
+		case VK_RETURN: //Enter按键事件
+			return true;
+		default:
+			;
+		}
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CUserInfoDlg::PreInitDialog()
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	CDialogEx::PreInitDialog();
 }

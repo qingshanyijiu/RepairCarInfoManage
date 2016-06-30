@@ -32,3 +32,24 @@ END_MESSAGE_MAP()
 
 
 // CSystemSetDlg message handlers
+
+
+BOOL CSystemSetDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	// 把Esc和Enter按键事件消息过滤掉，否则该消息会导致对应应用程序调用OnOK（）方法，结束应用程序
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		switch(pMsg->wParam)
+		{
+		case VK_ESCAPE: //Esc按键事件
+			return true;
+		case VK_RETURN: //Enter按键事件
+			return true;
+		default:
+			;
+		}
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}

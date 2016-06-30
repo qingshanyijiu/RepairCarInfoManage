@@ -12,7 +12,6 @@ class CRepairInfoQueryDlg : public CDialogEx
 public:
 	CRepairInfoQueryDlg(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CRepairInfoQueryDlg();
-	CRepairCarInfoManageDlg* m_parent;
 // Dialog Data
 	enum { IDD = IDD_MaintenanceMng_QUERY_Dlg };
 
@@ -38,5 +37,6 @@ private:
 
 public:
 	void	UpdateDataInfo();
-	
+	void	QueryRepairInfoByLicNumber(const char* lpLicNumber);	
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

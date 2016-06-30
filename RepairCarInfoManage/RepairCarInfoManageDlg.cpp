@@ -18,13 +18,9 @@
 #endif
 
 #define  BTN_ROOT 0
-static CRepairCarInfoManageDlg*	g_this = NULL;
-
-
-
+CRepairCarInfoManageDlg*	g_pMainDlg = NULL;
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
-
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -70,7 +66,7 @@ CRepairCarInfoManageDlg::CRepairCarInfoManageDlg(CWnd* pParent /*=NULL*/)
 	m_root = new CButtonExd();
 	m_root->InitBtnMap();
 
-	g_this = this;
+	g_pMainDlg = this;
 }
 
 void CRepairCarInfoManageDlg::DoDataExchange(CDataExchange* pDX)
@@ -83,6 +79,7 @@ BEGIN_MESSAGE_MAP(CRepairCarInfoManageDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_CTLCOLOR()
+	ON_BN_CLICKED(IDC_BUTTON_SysAbout, &CRepairCarInfoManageDlg::OnBnClickedButtonSysabout)
 END_MESSAGE_MAP()
 
 
@@ -138,7 +135,7 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	pWnd->Create(IDD_MaintenanceMng_QUERY_Dlg,this);
 	ShowParamDlg(pWnd,FALSE);
 	m_pages[IDD_MaintenanceMng_QUERY_Dlg] = pWnd;
-	((CRepairInfoQueryDlg*)pWnd)->m_parent = this;
+
 	//增加/修改
 	pWnd = new CRepairInfoDlg();
 	pWnd->Create(IDD_MaintenanceMng_MODIFY_Dlg,this);
@@ -151,6 +148,11 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	pWnd->Create(IDD_SYSSET_BASIC_DLG,this);
 	ShowParamDlg(pWnd,FALSE);
 	m_pages[IDD_SYSSET_BASIC_DLG] = pWnd;
+
+	pWnd = new CDialogEx();
+	pWnd->Create(IDD_DIALOG_SYSAbout,this);
+	ShowParamDlg(pWnd,FALSE);
+	m_pages[IDD_DIALOG_SYSAbout] = pWnd;
 	
 	int leftpad =0,toppad =-1;
 	CButtonExd *pCurrent=m_root,*pChild =NULL;
@@ -206,6 +208,11 @@ BOOL CRepairCarInfoManageDlg::OnInitDialog()
 	GetDlgItem(IDC_BUTTON_BasicSet)->GetWindowRect(&ChildRect);
 	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BUTTON_BasicSet),_T("基本设置"),IDC_BUTTON_BasicSet,PRect.Width()-ChildRect.Width(),toppad);
 	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::OnBnClickedButtonBasicset, this));
+	pCurrent->AddChild(pChild);
+
+	GetDlgItem(IDC_BUTTON_SysAbout)->GetWindowRect(&ChildRect);
+	pChild= new CButtonExd(this,(CButton*)GetDlgItem(IDC_BUTTON_SysAbout),_T("关于"),IDC_BUTTON_SysAbout,0,toppad);
+	pChild->SetAfterLBClickDealFunc(std::tr1::bind(&CRepairCarInfoManageDlg::OnBnClickedButtonSysabout, this));
 	pCurrent->AddChild(pChild);
 
 	m_root->Show();
@@ -430,6 +437,7 @@ void CRepairCarInfoManageDlg::OnBnClickedButtonBasicset()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
 	RightPageShow(IDD_SYSSET_BASIC_DLG);
+	((CUserInfoDlg*)m_pages[IDD_USERMNG_MODIFY_DLG])->SetOperateType(OPERATE_TYPE_ADD);
 }
 
 
@@ -463,8 +471,6 @@ HBRUSH CRepairCarInfoManageDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		break;
 	}
 
-
-
 	// TODO:  Return a different brush if the default is not desired
 	return hbr;
 }
@@ -475,5 +481,12 @@ void CRepairCarInfoManageDlg::ShowResultInfo(const char* lpShowInfo)
 }
 void CRepairCarInfoManageDlg::ShowOperateInfo(const char* lpShowInfo)
 {
-	g_this->ShowResultInfo(lpShowInfo);
+	g_pMainDlg->ShowResultInfo(lpShowInfo);
+}
+
+
+void CRepairCarInfoManageDlg::OnBnClickedButtonSysabout()
+{
+	// TODO: Add your control notification handler code here
+	RightPageShow(IDD_DIALOG_SYSAbout);
 }
