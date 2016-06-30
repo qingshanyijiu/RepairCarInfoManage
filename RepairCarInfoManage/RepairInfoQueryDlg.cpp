@@ -91,10 +91,13 @@ void CRepairInfoQueryDlg::OnSmenuRepairdelete()
 		int iID = atoi(m_repairinfolist.GetItemText(selectIndex,4));
 		int ret = DeleteRepairInfoByID(iID);
 		if(ret == 0)
+		{
 			m_repairinfolist.DeleteItem(selectIndex);
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息删除成功！");
+		}
 		else
 		{
-			MessageBox("删除失败!");
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息删除失败！");
 		}
 
 	}
@@ -115,6 +118,7 @@ void CRepairInfoQueryDlg::OnSmenuRepairdetail()
 	rinfo.strRepairReserve = m_repairinfolist.GetItemText(selectIndex,3).operator LPCSTR();
 	((CRepairInfoDlg*)(m_parent->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_SHOW,&rinfo);
 	m_parent->RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
+	CRepairCarInfoManageDlg::ShowOperateInfo("维修信息 - 详细内容！");
 }
 
 
@@ -132,6 +136,7 @@ void CRepairInfoQueryDlg::OnSmenuRepairmodify()
 	rinfo.strRepairReserve = m_repairinfolist.GetItemText(selectIndex,3).operator LPCSTR();
 	((CRepairInfoDlg*)(m_parent->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_MODIFY,&rinfo);
 	m_parent->RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
+	CRepairCarInfoManageDlg::ShowOperateInfo("维修信息 - 修改！");
 }
 
 
@@ -178,7 +183,11 @@ void CRepairInfoQueryDlg::OnBnClickedBtnMtQrepairinfo()
 	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),16);
 	m_curpage = 0;
 	std::vector<RepairTableInfo> repairInfoList;
-	GetRepairInfo(&rinfo,m_curpage,10,repairInfoList,true);
+	if(1 == GetRepairInfo(&rinfo,m_curpage,10,repairInfoList,true))
+	{
+		CRepairCarInfoManageDlg::ShowOperateInfo("维修信息查询失败！");
+		return;
+	}
 	int count = repairInfoList.size();
 	m_repairinfolist.DeleteAllItems();
 	int nRow =0;
@@ -192,6 +201,10 @@ void CRepairInfoQueryDlg::OnBnClickedBtnMtQrepairinfo()
 		sprintf_s(idstr,"%d",repairInfoList[i].iID);
 		m_repairinfolist.SetItemText(nRow,4,idstr);
 	}
+	if(count>0)
+		CRepairCarInfoManageDlg::ShowOperateInfo("维修信息查询成功！");
+	else
+		CRepairCarInfoManageDlg::ShowOperateInfo("没有查询到对应的维修信息！");
 }
 
 
@@ -199,7 +212,10 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQuserbefore()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
 	if(m_curpage<=0)
+	{
+		CRepairCarInfoManageDlg::ShowOperateInfo("没有上一页了，查询失败！");
 		return;
+	}
 	m_curpage--;
 	CString	strTemp;
 	RepairTableInfo rinfo;
@@ -208,11 +224,16 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQuserbefore()
 	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
 	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),16);
 	std::vector<RepairTableInfo> repairInfoList;
-	GetRepairInfo(&rinfo,m_curpage,10,repairInfoList,true);
+	if(1 == GetRepairInfo(&rinfo,m_curpage,10,repairInfoList,true))
+	{
+		CRepairCarInfoManageDlg::ShowOperateInfo("查询上一页失败！");
+		return;
+	}
 	int count = repairInfoList.size();
 	if(count<=0)
 	{
 		++m_curpage;
+		CRepairCarInfoManageDlg::ShowOperateInfo("没有上一页了，查询失败！");
 		return;
 	}
 	m_repairinfolist.DeleteAllItems();
@@ -227,6 +248,7 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQuserbefore()
 		sprintf_s(idstr,"%d",repairInfoList[i].iID);
 		m_repairinfolist.SetItemText(nRow,4,idstr);
 	}
+	CRepairCarInfoManageDlg::ShowOperateInfo("查询上一页成功！");
 }
 
 
@@ -241,11 +263,17 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQusernext()
 	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
 	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),16);
 	std::vector<RepairTableInfo> repairInfoList;
-	GetRepairInfo(&rinfo,m_curpage,10,repairInfoList,true);
+	if(1 == GetRepairInfo(&rinfo,m_curpage,10,repairInfoList,true))
+	{
+		CRepairCarInfoManageDlg::ShowOperateInfo("查询下一页失败！");
+		--m_curpage;
+		return;
+	}
 	int count = repairInfoList.size();
 	if(count<=0)
 	{
 		--m_curpage;
+		CRepairCarInfoManageDlg::ShowOperateInfo("没有下一页了，查询失败！");
 		return;
 	}
 	
@@ -261,4 +289,5 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQusernext()
 		sprintf_s(idstr,"%d",repairInfoList[i].iID);
 		m_repairinfolist.SetItemText(nRow,4,idstr);
 	}
+	CRepairCarInfoManageDlg::ShowOperateInfo("查询下一页成功！");
 }

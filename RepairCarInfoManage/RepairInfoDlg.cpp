@@ -5,6 +5,7 @@
 #include "RepairCarInfoManage.h"
 #include "RepairInfoDlg.h"
 #include "afxdialogex.h"
+#include "RepairCarInfoManageDlg.h"
 
 
 // CRepairInfoDlg dialog
@@ -58,22 +59,22 @@ void CRepairInfoDlg::OnBnClickedBtnRepairadd()
 	{
 		if(0 == InsertRepairInfo(&m_repairInfo))
 		{
-			MessageBox("增加成功!");
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息增加成功！");
 		}
 		else
 		{
-			MessageBox("增加失败!");
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息增加失败！");
 		}
 	}
 	else if (OPERATE_TYPE_MODIFY == m_bOperateType)
 	{
 		if(0 == UpdateRepairInfo(&m_repairInfo))
 		{
-			MessageBox("修改成功!");
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息修改成功！");
 		}
 		else
 		{
-			MessageBox("修改失败!");
+			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息修改失败！");
 		}
 	}
 }
