@@ -102,6 +102,7 @@ int CDbBase::QueryBySql(const char* strSql,RetDataType& retData )
 				tempStr<<"";
 			(retData[i].second).push_back(tempStr.str());
 			tempStr.clear();
+			tempStr.str("");
 		}
 	} 
 	sqlite3_finalize(pstmt);
