@@ -57,7 +57,7 @@ void CRepairInfoDlg::OnBnClickedBtnRepairadd()
 
 	if (OPERATE_TYPE_ADD == m_bOperateType)
 	{
-		if(0 == InsertRepairInfo(&m_repairInfo))
+		if(REPAIRCARINFOSAVEDB_SUCCESS == InsertRepairInfo(&m_repairInfo))
 		{
 			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息增加成功！");
 		}
@@ -68,7 +68,7 @@ void CRepairInfoDlg::OnBnClickedBtnRepairadd()
 	}
 	else if (OPERATE_TYPE_MODIFY == m_bOperateType)
 	{
-		if(0 == UpdateRepairInfo(&m_repairInfo))
+		if(REPAIRCARINFOSAVEDB_SUCCESS == UpdateRepairInfo(&m_repairInfo))
 		{
 			CRepairCarInfoManageDlg::ShowOperateInfo("维修信息修改成功！");
 		}

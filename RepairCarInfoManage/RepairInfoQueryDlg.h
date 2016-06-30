@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+using namespace std;
 
 
 // CRepairInfoQueryDlg dialog
@@ -31,6 +33,10 @@ public:
 	afx_msg void OnBnClickedButtonQuserbefore();
 	afx_msg void OnBnClickedButtonQusernext();
 private:
-	int m_curpage;
+	int							m_curpage;
+	vector<RepairTableInfo>		m_repairInfoVect;
+
+public:
+	void	UpdateDataInfo();
 	
 };

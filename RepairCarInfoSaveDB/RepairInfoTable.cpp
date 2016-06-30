@@ -20,7 +20,7 @@ int CRepairInfoTable::InitTable()
 	iRes = m_pDbBase->m_dbOp.get_table("RepairInfo");
 	if (SQLITE_OK != iRes)
 	{
-		const char* lpTableInfoSql = "CREATE TABLE RepairInfo (id int,licenseNumber TEXT ,repairDate TEXT, repairNotes TEXT,repairReserve	TEXT);";
+		const char* lpTableInfoSql = "CREATE TABLE RepairInfo (id INT PRIMARY KEY,licenseNumber TEXT ,repairDate TEXT, repairNotes TEXT,repairReserve	TEXT);";
 		iRes = m_pDbBase->m_dbOp.execute_dml(lpTableInfoSql);
 	}
 
@@ -32,17 +32,22 @@ int	CRepairInfoTable::InsertRepairInfo(PRepairTableInfo	pInfo)
 	int iRes = SQLITE_OK;
 	sqlstring sql;
 
-	sql<<"select max(id) from RepairInfo";
+	sql<<"select max(id) from RepairInfo;";
 	RetDataType RetData;
 	if(m_pDbBase->QueryBySql(sql.str().c_str(),RetData))
-		return SQLITE_ERROR;
+	{
+		sql.str("");
+		sql<<"select count(*) from RepairInfo;";
+		if (m_pDbBase->QueryBySql(sql.str().c_str(),RetData))
+			return SQLITE_ERROR;
+	}
 	std::string maxidstr = *RetData[0].second.begin();
 	if(maxidstr == "")
 		maxidstr = "0";
 	int maxid = atoi(maxidstr.c_str());
 	sql.clear();
 	sql.str("");
-	sql<<"insert into RepairInfo values (";
+	sql<<"insert into RepairInfo values(";
 	sql<<maxid+1<<",'";
 	sql<<pInfo->csLicenseNumber<<"','";
 	sql<<pInfo->csRepairDate<<"','";
@@ -65,7 +70,7 @@ int	CRepairInfoTable::UpdateRepairInfo(PRepairTableInfo	pInfo)
 	sql<<"repairDate='"<<pInfo->csRepairDate<<"',";
 	sql<<"repairNotes='"<<pInfo->strRepairNotes<<"',";
 	sql<<"repairReserve='"<<pInfo->strRepairReserve<<"'";
-	sql<<" where id="<<pInfo->iID;
+	sql<<" where id="<<pInfo->iID<<";";
 	/*
 	if (pInfo->strRepairNotes.size())
 	{
@@ -96,7 +101,7 @@ int CRepairInfoTable::GetRepairInfoByLicNumber(const char* lpLicNumer,int iPages
 
 	sqlstring sql;
 	sql<<"select * from RepairInfo where  licenseNumber ='";
-	sql<<lpLicNumer<<"'order by by licenseNumber ";
+	sql<<lpLicNumer<<"'order by licenseNumber ";
 	if (false == bOrderInc)
 		sql<<"desc ";
 	sql<<"limit "<<iMaxCount<<" offset "<<iMaxCount*iPages<<";";
@@ -111,7 +116,6 @@ int CRepairInfoTable::GetRepairInfo(const PRepairTableInfo const pInfo,int iPage
 
 	sqlstring sql;
 	sql<<"select * from RepairInfo where ";
-	const char* lpTableInfoSql = "CREATE TABLE RepairInfo (licenseNumber TEXT ,repairDate TEXT, repairNotes TEXT,repairReserve	TEXT);";
 
 	if(!bFuzzyQuery)
 	{
@@ -144,7 +148,7 @@ int CRepairInfoTable::GetRepairInfoByDate(const char* lpDate,int iPages,int iMax
 
 	sqlstring sql;
 	sql<<"select * from RepairInfo where  repairDate ='";
-	sql<<lpDate<<"'order by by licenseNumber ";
+	sql<<lpDate<<"'order by licenseNumber ";
 	if (false == bOrderInc)
 		sql<<"desc ";
 	sql<<"limit "<<iMaxCount<<" offset "<<iMaxCount*iPages<<";";

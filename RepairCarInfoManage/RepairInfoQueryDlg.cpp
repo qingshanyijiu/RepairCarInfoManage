@@ -74,7 +74,8 @@ void CRepairInfoQueryDlg::OnDblclkListRepairlist(NMHDR *pNMHDR, LRESULT *pResult
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	// TODO: Add your control notification handler code here
-	
+
+	CRepairInfoQueryDlg::OnSmenuRepairdetail();
 
 	*pResult = 0;
 }
@@ -167,6 +168,10 @@ BOOL CRepairInfoQueryDlg::OnInitDialog()
 	m_repairinfolist.InsertColumn( 2, "修车信息", LVCFMT_LEFT, 300 );
 	m_repairinfolist.InsertColumn( 3, "备注", LVCFMT_LEFT, 300 );
 	m_repairinfolist.InsertColumn( 4, "ID", LVCFMT_LEFT, 0 );
+
+	m_curpage = 0;
+	m_repairInfoVect.reserve(MAX_QUERY_COUNT);
+	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -177,31 +182,23 @@ void CRepairInfoQueryDlg::OnBnClickedBtnMtQrepairinfo()
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
 	CString	strTemp;
 	RepairTableInfo rinfo;
+
 	GetDlgItemText(IDC_EDIT_QrepairLicNumber,strTemp);
 	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),16);
 	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
 	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),16);
+
 	m_curpage = 0;
-	std::vector<RepairTableInfo> repairInfoList;
-	if(1 == GetRepairInfo(&rinfo,m_curpage,10,repairInfoList,true))
+	m_repairInfoVect.clear();
+
+	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&rinfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
 	{
 		CRepairCarInfoManageDlg::ShowOperateInfo("维修信息查询失败！");
 		return;
 	}
-	int count = repairInfoList.size();
-	m_repairinfolist.DeleteAllItems();
-	int nRow =0;
-	char idstr[10];
-	for (int i=0;i<count;++i)
-	{
-		nRow = m_repairinfolist.InsertItem(i,repairInfoList[i].csLicenseNumber);
-		m_repairinfolist.SetItemText(nRow,1,repairInfoList[i].csRepairDate);
-		m_repairinfolist.SetItemText(nRow,2,repairInfoList[i].strRepairNotes.c_str());
-		m_repairinfolist.SetItemText(nRow,3,repairInfoList[i].strRepairReserve.c_str());
-		sprintf_s(idstr,"%d",repairInfoList[i].iID);
-		m_repairinfolist.SetItemText(nRow,4,idstr);
-	}
-	if(count>0)
+
+	UpdateDataInfo();
+	if(m_repairInfoVect.size()>0)
 		CRepairCarInfoManageDlg::ShowOperateInfo("维修信息查询成功！");
 	else
 		CRepairCarInfoManageDlg::ShowOperateInfo("没有查询到对应的维修信息！");
@@ -216,39 +213,33 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQuserbefore()
 		CRepairCarInfoManageDlg::ShowOperateInfo("没有上一页了，查询失败！");
 		return;
 	}
-	m_curpage--;
+	
 	CString	strTemp;
 	RepairTableInfo rinfo;
+	
+	--m_curpage;
+	m_repairInfoVect.clear();
 	GetDlgItemText(IDC_EDIT_QrepairLicNumber,strTemp);
 	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),16);
 	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
 	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),16);
-	std::vector<RepairTableInfo> repairInfoList;
-	if(1 == GetRepairInfo(&rinfo,m_curpage,10,repairInfoList,true))
+	
+	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&rinfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
 	{
 		CRepairCarInfoManageDlg::ShowOperateInfo("查询上一页失败！");
 		return;
 	}
-	int count = repairInfoList.size();
-	if(count<=0)
+	if(m_repairInfoVect.size()<=0)
 	{
 		++m_curpage;
+		UpdateDataInfo();
 		CRepairCarInfoManageDlg::ShowOperateInfo("没有上一页了，查询失败！");
-		return;
 	}
-	m_repairinfolist.DeleteAllItems();
-	int nRow =0;
-	char idstr[10];
-	for (int i=0;i<count;++i)
+	else
 	{
-		nRow = m_repairinfolist.InsertItem(i,repairInfoList[i].csLicenseNumber);
-		m_repairinfolist.SetItemText(nRow,1,repairInfoList[i].csRepairDate);
-		m_repairinfolist.SetItemText(nRow,2,repairInfoList[i].strRepairNotes.c_str());
-		m_repairinfolist.SetItemText(nRow,3,repairInfoList[i].strRepairReserve.c_str());
-		sprintf_s(idstr,"%d",repairInfoList[i].iID);
-		m_repairinfolist.SetItemText(nRow,4,idstr);
+		UpdateDataInfo();
+		CRepairCarInfoManageDlg::ShowOperateInfo("查询上一页成功！");
 	}
-	CRepairCarInfoManageDlg::ShowOperateInfo("查询上一页成功！");
 }
 
 
@@ -257,37 +248,55 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQusernext()
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
 	CString	strTemp;
 	RepairTableInfo rinfo;
+
 	++m_curpage;
+	m_repairInfoVect.clear();
+
 	GetDlgItemText(IDC_EDIT_QrepairLicNumber,strTemp);
 	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),16);
 	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
 	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),16);
-	std::vector<RepairTableInfo> repairInfoList;
-	if(1 == GetRepairInfo(&rinfo,m_curpage,10,repairInfoList,true))
+
+	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&rinfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
 	{
 		CRepairCarInfoManageDlg::ShowOperateInfo("查询下一页失败！");
 		--m_curpage;
 		return;
 	}
-	int count = repairInfoList.size();
-	if(count<=0)
+
+	if(m_repairInfoVect.size()<=0)
 	{
 		--m_curpage;
+		UpdateDataInfo();
 		CRepairCarInfoManageDlg::ShowOperateInfo("没有下一页了，查询失败！");
-		return;
 	}
-	
-	m_repairinfolist.DeleteAllItems();
-	int nRow =0;
-	char idstr[10];
-	for (int i=0;i<count;++i)
+	else
 	{
-		nRow = m_repairinfolist.InsertItem(i,repairInfoList[i].csLicenseNumber);
-		m_repairinfolist.SetItemText(nRow,1,repairInfoList[i].csRepairDate);
-		m_repairinfolist.SetItemText(nRow,2,repairInfoList[i].strRepairNotes.c_str());
-		m_repairinfolist.SetItemText(nRow,3,repairInfoList[i].strRepairReserve.c_str());
-		sprintf_s(idstr,"%d",repairInfoList[i].iID);
-		m_repairinfolist.SetItemText(nRow,4,idstr);
+		UpdateDataInfo();
+		CRepairCarInfoManageDlg::ShowOperateInfo("查询下一页成功！");
 	}
-	CRepairCarInfoManageDlg::ShowOperateInfo("查询下一页成功！");
+}
+
+
+void	CRepairInfoQueryDlg::UpdateDataInfo()
+{
+	m_repairinfolist.SetRedraw(FALSE);
+	//更新内容
+	m_repairinfolist.DeleteAllItems();
+
+	int nRow;
+	char idstr[10];
+	for(int i = 0 ; i < m_repairInfoVect.size() ; ++i) 
+	{ 
+		nRow = m_repairinfolist.InsertItem(i,m_repairInfoVect[i].csLicenseNumber);
+		m_repairinfolist.SetItemText(nRow,1,m_repairInfoVect[i].csRepairDate);
+		m_repairinfolist.SetItemText(nRow,2,m_repairInfoVect[i].strRepairNotes.c_str());
+		m_repairinfolist.SetItemText(nRow,3,m_repairInfoVect[i].strRepairReserve.c_str());
+		sprintf_s(idstr,"%d",m_repairInfoVect[i].iID);
+		m_repairinfolist.SetItemText(nRow,4,idstr);
+	} 
+
+	m_repairinfolist.SetRedraw(TRUE);
+	m_repairinfolist.Invalidate();
+	m_repairinfolist.UpdateWindow();
 }
