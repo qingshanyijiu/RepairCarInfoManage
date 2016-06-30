@@ -96,6 +96,7 @@ void CUserMngQueryDlg::OnBnClickedBtnUserUserquery()
 
 	strTemp.Empty();
 	m_curPageIndex = 0;
+	m_userInfoVect.clear();
 
 	GetDlgItemText(IDC_EDIT_QuserLicNumber,strTemp);
 	if (!strTemp.IsEmpty())
@@ -191,6 +192,7 @@ void CUserMngQueryDlg::OnBnClickedButtonQuserbefore()
 	// TODO: Add your control notification handler code here
 	if (m_curPageIndex)
 	{
+		m_userInfoVect.clear();
 		--m_curPageIndex;
 		if(REPAIRCARINFOSAVEDB_SUCCESS == m_pQueryFunc(m_strQueryKey.length()?m_strQueryKey.c_str():NULL,
 			m_curPageIndex,
@@ -218,6 +220,7 @@ void CUserMngQueryDlg::OnBnClickedButtonQusernext()
 	// TODO: Add your control notification handler code here
 	if (m_userInfoVect.size()<MAX_QUERY_COUNT)
 	{
+		m_userInfoVect.clear();
 		++m_curPageIndex;
 		if(REPAIRCARINFOSAVEDB_SUCCESS == m_pQueryFunc(m_strQueryKey.length()?m_strQueryKey.c_str():NULL,
 			m_curPageIndex,
