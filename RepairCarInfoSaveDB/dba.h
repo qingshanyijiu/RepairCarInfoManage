@@ -112,6 +112,8 @@ public:
 		return res;
 	}
 
+	
+
 	sqlite3* GetDB()
 	{
 		return p_db_;

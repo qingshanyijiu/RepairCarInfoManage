@@ -20,7 +20,7 @@ int CRepairInfoTable::InitTable()
 	iRes = m_pDbBase->m_dbOp.get_table("RepairInfo");
 	if (SQLITE_OK != iRes)
 	{
-		const char* lpTableInfoSql = "CREATE TABLE RepairInfo (licenseNumber TEXT ,repairDate TEXT, repairNotes TEXT,repairReserve	TEXT);";
+		const char* lpTableInfoSql = "CREATE TABLE RepairInfo (id int,licenseNumber TEXT ,repairDate TEXT, repairNotes TEXT,repairReserve	TEXT);";
 		iRes = m_pDbBase->m_dbOp.execute_dml(lpTableInfoSql);
 	}
 
@@ -32,7 +32,18 @@ int	CRepairInfoTable::InsertRepairInfo(PRepairTableInfo	pInfo)
 	int iRes = SQLITE_OK;
 	sqlstring sql;
 
-	sql<<"insert into RepairInfo values ('";
+	sql<<"select max(id) from RepairInfo";
+	RetDataType RetData;
+	if(m_pDbBase->QueryBySql(sql.str().c_str(),RetData))
+		return SQLITE_ERROR;
+	std::string maxidstr = *RetData[0].second.begin();
+	if(maxidstr == "")
+		maxidstr = "0";
+	int maxid = atoi(maxidstr.c_str());
+	sql.clear();
+	sql.str("");
+	sql<<"insert into RepairInfo values (";
+	sql<<maxid+1<<",'";
 	sql<<pInfo->csLicenseNumber<<"','";
 	sql<<pInfo->csRepairDate<<"','";
 	sql<<pInfo->strRepairNotes<<"','";

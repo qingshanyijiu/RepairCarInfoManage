@@ -41,6 +41,7 @@ typedef	struct	tagUserTableInfo
 
 typedef	struct	tagRepairTableInfo
 {
+	int iID;
 	char		csLicenseNumber[16];
 	char		csRepairDate[16];		//YYYY-MM-DD
 	std::string	strRepairNotes;
@@ -52,6 +53,7 @@ typedef	struct	tagRepairTableInfo
 	}
 
 	void Clear(){
+		iID =0;
 		memset(csLicenseNumber,0,sizeof(csLicenseNumber));
 		memset(csRepairDate,0,sizeof(csRepairDate));
 		strRepairNotes.clear();
