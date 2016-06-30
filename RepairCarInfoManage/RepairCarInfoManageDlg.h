@@ -13,23 +13,25 @@ class CRepairCarInfoManageDlg : public CDialogEx
 // 构造
 public:
 	CRepairCarInfoManageDlg(CWnd* pParent = NULL);	// 标准构造函数
-
+	typedef std::map<long,CDialog *> PageMap;
+	PageMap m_pages;
 // 对话框数据
 	enum { IDD = IDD_REPAIRCARINFOMANAGE_DIALOG };
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 private:
-	typedef std::map<long,CDialog *> PageMap;
-	PageMap m_pages;
+	
 	BOOL ShowParamDlg(CWnd* pWnd, BOOL bShow);
 	CWnd* m_pCurrentWnd;
 	CButtonExd* m_root;
 // 实现
+public:
+	void RightPageShow(long DLGID);
 protected:
 	HICON m_hIcon;
 	void Expand(int index);
-	void RightPageShow(long DLGID);
+	
 	void AfterButtonClick(void*);
 	void TestBofore(void* );
 	void TestAfter(void*);

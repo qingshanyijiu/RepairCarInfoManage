@@ -56,11 +56,25 @@ void CRepairInfoDlg::OnBnClickedBtnRepairadd()
 
 	if (OPERATE_TYPE_ADD == m_bOperateType)
 	{
-		InsertRepairInfo(&m_repairInfo);
+		if(0 == InsertRepairInfo(&m_repairInfo))
+		{
+			MessageBox("增加成功!");
+		}
+		else
+		{
+			MessageBox("增加失败!");
+		}
 	}
 	else if (OPERATE_TYPE_MODIFY == m_bOperateType)
 	{
-		UpdateRepairInfo(&m_repairInfo);
+		if(0 == UpdateRepairInfo(&m_repairInfo))
+		{
+			MessageBox("修改成功!");
+		}
+		else
+		{
+			MessageBox("修改失败!");
+		}
 	}
 }
 
@@ -69,6 +83,8 @@ void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
 	m_RepairLicNumber.SetReadOnly(FALSE);
 	m_bOperateType = bType;
 	m_repairInfo.Clear();
+	if(pInfo != NULL)
+		m_repairInfo.Copy(*pInfo);
 	switch(bType)
 	{
 	case OPERATE_TYPE_ADD:

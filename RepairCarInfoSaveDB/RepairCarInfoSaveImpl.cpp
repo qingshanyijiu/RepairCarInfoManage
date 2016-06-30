@@ -162,3 +162,12 @@ int	CRepairCarInfoSaveImpl::DeleteRepairInfoByLicNumber(const char* lpLicNumer)
 	CCriticalLock::CAutoLock lock(m_dbLock);
 	return m_pRepairTableOp->DeleteRepairInfoByLicNumber(lpLicNumer);
 }
+
+int	CRepairCarInfoSaveImpl::DeleteRepairInfoByID(int id)
+{
+	if (NULL == m_pRepairTableOp)
+		return REPAIRCARINFOSAVEDB_ERROR;
+
+	CCriticalLock::CAutoLock lock(m_dbLock);
+	return m_pRepairTableOp->DeleteRepairInfoByID(id);
+}

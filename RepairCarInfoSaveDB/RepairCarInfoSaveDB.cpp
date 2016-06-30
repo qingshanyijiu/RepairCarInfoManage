@@ -96,3 +96,8 @@ int	REPAIRCARINFOSAVEDB_API DeleteRepairInfoByLicNumber(const char* lpLicNumer)
 {
 	return CRepairCarInfoSaveImpl::GetInstance()->DeleteRepairInfoByLicNumber(lpLicNumer);
 }
+
+int	REPAIRCARINFOSAVEDB_API DeleteRepairInfoByID(int id)
+{
+	return CRepairCarInfoSaveImpl::GetInstance()->DeleteRepairInfoByID(id);
+}
