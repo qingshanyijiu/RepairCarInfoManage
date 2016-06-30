@@ -30,6 +30,8 @@ public:
 
 public:
 	void	SetOperateType(BYTE bType,PUserTableInfo pInfo=NULL);
+
+public:
 	CEdit m_userAddreEdit;
 	CEdit m_userLicNumberEdit;
 	CEdit m_userNameEdit;

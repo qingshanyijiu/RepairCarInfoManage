@@ -5,6 +5,7 @@
 #include "RepairCarInfoManage.h"
 #include "UserInfoDlg.h"
 #include "afxdialogex.h"
+#include "RepairCarInfoManageDlg.h"
 
 
 // CUserInfoDlg dialog
@@ -60,13 +61,26 @@ void CUserInfoDlg::OnBnClickedBtnUserAdd()
 
 	if (OPERATE_TYPE_ADD == m_bOperateType)
 	{
-		InsertUserInfo(&m_userInfo);
+		if(REPAIRCARINFOSAVEDB_SUCCESS ==InsertUserInfo(&m_userInfo))
+		{
+			CRepairCarInfoManageDlg::ShowOperateInfo("插入车主信息成功！");
+		}
+		else
+		{
+			CRepairCarInfoManageDlg::ShowOperateInfo("插入车主信息失败！可能是车牌信息冲突了！");
+		}
 	}
 	else if (OPERATE_TYPE_MODIFY == m_bOperateType)
 	{
-		UpdateUserInfo(&m_userInfo);
+		if(REPAIRCARINFOSAVEDB_SUCCESS ==UpdateUserInfo(&m_userInfo))
+		{
+			CRepairCarInfoManageDlg::ShowOperateInfo("修改车主信息成功！");
+		}
+		else
+		{
+			CRepairCarInfoManageDlg::ShowOperateInfo("修改车主信息失败！可能是无该记录！");
+		}
 	}
-
 }
 
 
@@ -74,6 +88,7 @@ void CUserInfoDlg::SetOperateType(BYTE bType,PUserTableInfo pInfo/*=NULL*/)
 {
 	m_userLicNumberEdit.SetReadOnly(FALSE);
 	m_bOperateType = bType;
+	m_userInfo.Clear();
 
 	switch(bType)
 	{
@@ -87,17 +102,16 @@ void CUserInfoDlg::SetOperateType(BYTE bType,PUserTableInfo pInfo/*=NULL*/)
 
 			m_addMotifyButton.SetWindowText("增加");
 			m_addMotifyButton.ShowWindow(SW_SHOW);
-			m_userInfo.Clear();
 		}
 		break;
 	case OPERATE_TYPE_MODIFY:
 	case OPERATE_TYPE_SHOW:
 
-		SetDlgItemText(IDC_EDIT_userLicNumber,m_userInfo.csLicenseNumber);
-		SetDlgItemText(IDC_EDIT_userName,m_userInfo.csUserName);
-		SetDlgItemText(IDC_EDIT_userPhone,m_userInfo.csUserPhone);
-		SetDlgItemText(IDC_EDIT_userAddress,m_userInfo.csUserAddress);
-		SetDlgItemText(IDC_EDIT_userReserve,m_userInfo.strUserReserve.c_str());
+		SetDlgItemText(IDC_EDIT_userLicNumber,pInfo->csLicenseNumber);
+		SetDlgItemText(IDC_EDIT_userName,pInfo->csUserName);
+		SetDlgItemText(IDC_EDIT_userPhone,pInfo->csUserPhone);
+		SetDlgItemText(IDC_EDIT_userAddress,pInfo->csUserAddress);
+		SetDlgItemText(IDC_EDIT_userReserve,pInfo->strUserReserve.c_str());
 
 		if(OPERATE_TYPE_MODIFY == m_bOperateType)
 		{

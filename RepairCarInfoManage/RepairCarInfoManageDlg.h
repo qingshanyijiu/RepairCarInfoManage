@@ -54,4 +54,5 @@ public:
 
 public:
 	void ShowResultInfo(const char* lpShowInfo);
+	static void ShowOperateInfo(const char* lpShowInfo);
 };

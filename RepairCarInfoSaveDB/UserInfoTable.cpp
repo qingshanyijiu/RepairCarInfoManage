@@ -94,8 +94,8 @@ int CUserInfoTable::GetUserInfoByLicNumber(const char* lpLicNumer,int iPages,int
 		return GetUserInfoAllData(iPages,iMaxCount,userInfoList,bOrderInc);
 
 	sqlstring sql;
-	sql<<"select * from UserInfo where  licenseNumber ='";
-	sql<<lpLicNumer<<"'order by by licenseNumber ";
+	sql<<"select * from UserInfo where  licenseNumber like '%";
+	sql<<lpLicNumer<<"%' order by by licenseNumber ";
 	if (false == bOrderInc)
 		sql<<"desc ";
 	sql<<"limit "<<iMaxCount<<" offset "<<iMaxCount*iPages<<";";
@@ -109,8 +109,8 @@ int CUserInfoTable::GetUserInfoByName(const char* lpName,int iPages,int iMaxCoun
 		return GetUserInfoAllData(iPages,iMaxCount,userInfoList,bOrderInc);
 
 	sqlstring sql;
-	sql<<"select * from UserInfo where  userName ='";
-	sql<<lpName<<"'order by by userName ";
+	sql<<"select * from UserInfo where  licenseNumber like '%";
+	sql<<lpName<<"%' order by by userName ";
 	if (false == bOrderInc)
 		sql<<"desc ";
 	sql<<"limit "<<iMaxCount<<" offset "<<iMaxCount*iPages<<";";
@@ -124,8 +124,8 @@ int CUserInfoTable::GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int i
 		return GetUserInfoAllData(iPages,iMaxCount,userInfoList,bOrderInc);
 
 	sqlstring sql;
-	sql<<"select * from UserInfo where  userPhone ='";
-	sql<<lpPhoneNumer<<"'order by by userPhone ";
+	sql<<"select * from UserInfo where  licenseNumber like '%";
+	sql<<lpPhoneNumer<<"%' order by by userPhone ";
 	if (false == bOrderInc)
 		sql<<"desc ";
 	sql<<"limit "<<iMaxCount<<" offset "<<iMaxCount*iPages<<";";
