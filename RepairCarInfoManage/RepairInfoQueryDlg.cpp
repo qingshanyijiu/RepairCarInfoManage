@@ -29,6 +29,10 @@ void CRepairInfoQueryDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_RepairList, m_repairinfolist);
+	DDX_Control(pDX, IDC_DATETIMEPICKER_Date, m_dateCtrl);
+	DDX_Control(pDX, IDC_COMBO_Query, m_queryCombo);
+	DDX_Control(pDX, IDC_EDIT_Query, m_queryEdit);
+	DDX_Control(pDX, IDC_STATIC_QueryKey, m_queryStatic);
 }
 
 
@@ -42,6 +46,7 @@ BEGIN_MESSAGE_MAP(CRepairInfoQueryDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_MT_QRepairInfo, &CRepairInfoQueryDlg::OnBnClickedBtnMtQrepairinfo)
 	ON_BN_CLICKED(IDC_BUTTON_QUserBefore, &CRepairInfoQueryDlg::OnBnClickedButtonQuserbefore)
 	ON_BN_CLICKED(IDC_BUTTON_QUserNext, &CRepairInfoQueryDlg::OnBnClickedButtonQusernext)
+	ON_CBN_SELCHANGE(IDC_COMBO_Query, &CRepairInfoQueryDlg::OnSelchangeComboQuery)
 END_MESSAGE_MAP()
 
 
@@ -168,6 +173,39 @@ BOOL CRepairInfoQueryDlg::OnInitDialog()
 	m_repairinfolist.InsertColumn( 5, "备注", LVCFMT_LEFT, 150 );
 	m_repairinfolist.InsertColumn( 6, "ID", LVCFMT_LEFT, 0 );
 
+	m_queryCombo.InsertString(0,"查询所有");
+	m_queryCombo.InsertString(1,"按车牌号");
+	m_queryCombo.InsertString(2,"按修车日期");
+	m_queryCombo.InsertString(3,"按下次路程");
+	m_queryCombo.InsertString(4,"修车内容");
+	m_queryCombo.InsertString(5,"修车项目");
+	m_queryCombo.InsertString(6,"修车项目");
+
+	m_queryCombo.SetCurSel(0);
+	m_queryEdit.ShowWindow(SW_HIDE);
+	m_dateCtrl.ShowWindow(SW_HIDE);
+	m_queryStatic.ShowWindow(SW_HIDE);
+	m_queryEdit.SetParent(this);
+	m_dateCtrl.SetParent(this);
+
+	CRect combRect,tempRect;
+	m_queryCombo.GetWindowRect(&combRect);
+	combRect.top -= 30;
+	combRect.bottom -=30;
+
+	m_queryEdit.GetWindowRect(&tempRect);
+	tempRect.top = combRect.top;
+	tempRect.bottom = combRect.bottom;
+	m_queryEdit.MoveWindow(&tempRect);
+
+	m_dateCtrl.GetWindowRect(&tempRect);
+	tempRect.top = combRect.top;
+	tempRect.bottom = combRect.bottom;
+	m_dateCtrl.MoveWindow(&tempRect);
+
+	m_dateCtrl.SetTime(&CTime::GetCurrentTime());
+	CTimeSpan timespanOneMonth(180,0,0,0); //这里设置为当前日期推后180天 3
+
 	m_curpage = 0;
 	m_repairInfoVect.reserve(MAX_QUERY_COUNT);
 	
@@ -179,20 +217,57 @@ BOOL CRepairInfoQueryDlg::OnInitDialog()
 void CRepairInfoQueryDlg::OnBnClickedBtnMtQrepairinfo()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
-	CString	strTemp;
-	RepairTableInfo rinfo;
-
-	GetDlgItemText(IDC_EDIT_QrepairLicNumber,strTemp);
-	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
-	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
-	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),32);
-	GetDlgItemText(IDC_EDIT_QrepairNextDate,strTemp);
-	strncpy(rinfo.csRepairNextDate,strTemp.operator LPCSTR(),32);
-
 	m_curpage = 0;
 	m_repairInfoVect.clear();
+	m_queryInfo.Clear();
 
-	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&rinfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
+	switch(m_queryCombo.GetCurSel())
+	{
+	case 1:
+		{
+			CString	strTemp;
+			GetDlgItemText(IDC_EDIT_Query,strTemp);
+			strncpy(m_queryInfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
+		}
+		break;
+	case 2:
+		{
+			CTime  tempTime;
+			m_dateCtrl.GetTime(tempTime);
+			strncpy(m_queryInfo.csRepairDate,tempTime.Format("%Y-%m-%d").operator LPCSTR(),32);
+		}
+		break;
+	case 3:
+		{
+			CTime  tempTime;
+			m_dateCtrl.GetTime(tempTime);
+			strncpy(m_queryInfo.csRepairNextDate,tempTime.Format("%Y-%m-%d").operator LPCSTR(),32);
+		}
+		break;
+	case 4:
+		{
+			CString	strTemp;
+			GetDlgItemText(IDC_EDIT_Query,strTemp);
+			m_queryInfo.strRepairNotes = strTemp.operator LPCSTR();
+		}
+		break;
+	case 5:
+		{
+			CString	strTemp;
+			GetDlgItemText(IDC_EDIT_Query,strTemp);
+			m_queryInfo.strRepairItems = strTemp.operator LPCSTR();
+		}
+		break;
+	case 6:
+		{
+			CString	strTemp;
+			GetDlgItemText(IDC_EDIT_Query,strTemp);
+			m_queryInfo.strRepairReserve = strTemp.operator LPCSTR();
+		}
+		break;
+	}
+
+	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&m_queryInfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
 	{
 		CRepairCarInfoManageDlg::ShowOperateInfo("维修信息查询失败！");
 		return;
@@ -208,7 +283,7 @@ void CRepairInfoQueryDlg::OnBnClickedBtnMtQrepairinfo()
 void CRepairInfoQueryDlg::QueryRepairInfoByLicNumber(const char* lpLicNumber)
 {
 	SetDlgItemText(IDC_EDIT_QrepairLicNumber,lpLicNumber);
-	SetDlgItemText(IDC_EDIT_QrepairDate,"");
+	//SetDlgItemText(IDC_EDIT_QrepairDate,"");
 
 	OnBnClickedBtnMtQrepairinfo();
 }
@@ -223,19 +298,10 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQuserbefore()
 		return;
 	}
 	
-	CString	strTemp;
-	RepairTableInfo rinfo;
-	
 	--m_curpage;
 	m_repairInfoVect.clear();
-	GetDlgItemText(IDC_EDIT_QrepairLicNumber,strTemp);
-	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
-	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
-	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),32);
-	GetDlgItemText(IDC_EDIT_QrepairNextDate,strTemp);
-	strncpy(rinfo.csRepairNextDate,strTemp.operator LPCSTR(),32);
 	
-	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&rinfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
+	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&m_queryInfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
 	{
 		CRepairCarInfoManageDlg::ShowOperateInfo("查询上一页失败！");
 		return;
@@ -263,21 +329,10 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQusernext()
 		return;
 	}
 
-
-	CString	strTemp;
-	RepairTableInfo rinfo;
-
 	++m_curpage;
 	m_repairInfoVect.clear();
 
-	GetDlgItemText(IDC_EDIT_QrepairLicNumber,strTemp);
-	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
-	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
-	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),32);
-	GetDlgItemText(IDC_EDIT_QrepairNextDate,strTemp);
-	strncpy(rinfo.csRepairNextDate,strTemp.operator LPCSTR(),32);
-
-	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&rinfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
+	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&m_queryInfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
 	{
 		CRepairCarInfoManageDlg::ShowOperateInfo("查询下一页失败！");
 		--m_curpage;
@@ -342,4 +397,27 @@ BOOL CRepairInfoQueryDlg::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CRepairInfoQueryDlg::OnSelchangeComboQuery()
+{
+	// TODO: Add your control notification handler code here
+	m_queryEdit.ShowWindow(SW_HIDE);
+	m_dateCtrl.ShowWindow(SW_HIDE);
+	m_queryStatic.ShowWindow(SW_HIDE);
+
+	switch(m_queryCombo.GetCurSel())
+	{
+	case 0:
+		break;
+	case 2:case 3:
+		m_dateCtrl.ShowWindow(SW_SHOW);
+		m_queryStatic.ShowWindow(SW_SHOW);
+		break;
+	default:
+		m_queryEdit.ShowWindow(SW_SHOW);
+		m_queryStatic.ShowWindow(SW_SHOW);
+		break;
+	}
 }

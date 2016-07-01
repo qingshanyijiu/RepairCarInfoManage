@@ -34,9 +34,16 @@ public:
 private:
 	int							m_curpage;
 	vector<RepairTableInfo>		m_repairInfoVect;
+	RepairTableInfo				m_queryInfo;
 
 public:
 	void	UpdateDataInfo();
 	void	QueryRepairInfoByLicNumber(const char* lpLicNumber);	
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	CDateTimeCtrl m_dateCtrl;
+	CButton m_queryAllCheck;
+	CComboBox m_queryCombo;
+	CEdit m_queryEdit;
+	afx_msg void OnSelchangeComboQuery();
+	CStatic m_queryStatic;
 };

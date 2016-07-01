@@ -7,7 +7,7 @@ class CRepairInfoDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CRepairInfoDlg)
 public:
-	RepairTableInfo m_repairInfo;
+	RepairTableInfo			m_repairInfo;
 	BYTE					m_bOperateType;
 	void	SetOperateType(BYTE bType,PRepairTableInfo pInfo=NULL);
 public:
@@ -23,11 +23,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedBtnRepairadd();
-	CEdit m_RepairDataEdit;
 	CEdit m_RepairLicNumber;
 	CEdit m_RepairNotes;
 	CEdit m_RepairReserve;
 	CButton m_AddModifyButton;
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	CDateTimeCtrl m_dateCtrl;
+	CDateTimeCtrl m_nextDateCtrl;
 };

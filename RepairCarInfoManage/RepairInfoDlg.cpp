@@ -26,11 +26,12 @@ CRepairInfoDlg::~CRepairInfoDlg()
 void CRepairInfoDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_EDIT_RepairDate, m_RepairDataEdit);
 	DDX_Control(pDX, IDC_EDIT_RepairLicNumber, m_RepairLicNumber);
 	DDX_Control(pDX, IDC_EDIT_RepairNotes, m_RepairNotes);
 	DDX_Control(pDX, IDC_EDIT_RepairReserve, m_RepairReserve);
 	DDX_Control(pDX, IDC_BTN_RepairAdd, m_AddModifyButton);
+	DDX_Control(pDX, IDC_DATETIMEPICKER_Date, m_dateCtrl);
+	DDX_Control(pDX, IDC_DATETIMEPICKER_NextDate, m_nextDateCtrl);
 }
 
 
@@ -46,13 +47,19 @@ void CRepairInfoDlg::OnBnClickedBtnRepairadd()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
 	CString	strTemp;
+	CTime   tempTime;
 
 	GetDlgItemText(IDC_EDIT_RepairLicNumber,strTemp);
 	strncpy(m_repairInfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
-	GetDlgItemText(IDC_EDIT_RepairDate,strTemp);
-	strncpy(m_repairInfo.csRepairDate,strTemp.operator LPCSTR(),32);
-	GetDlgItemText(IDC_EDIT_RepairNextDate,strTemp);
-	strncpy(m_repairInfo.csRepairNextDate,strTemp.operator LPCSTR(),32);
+
+	m_dateCtrl.GetTime(tempTime);
+	strncpy(m_repairInfo.csRepairDate,tempTime.Format("%Y-%m-%d").operator LPCSTR(),32);
+
+	m_nextDateCtrl.GetTime(tempTime);
+	strncpy(m_repairInfo.csRepairNextDate,tempTime.Format("%Y-%m-%d").operator LPCSTR(),32);
+	
+
+
 	GetDlgItemText(IDC_EDIT_RepairNotes,strTemp);
 	m_repairInfo.strRepairNotes = strTemp.operator LPCSTR();
 	GetDlgItemText(IDC_EDIT_RepairItems,strTemp);
@@ -99,8 +106,12 @@ void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
 	case OPERATE_TYPE_ADD:
 		{
 			SetDlgItemText(IDC_EDIT_RepairLicNumber,"");
-			SetDlgItemText(IDC_EDIT_RepairDate,"");
-			SetDlgItemText(IDC_EDIT_RepairNextDate,"");
+
+			m_dateCtrl.SetTime(&CTime::GetCurrentTime());
+			CTimeSpan timespanOneMonth(180,0,0,0); //这里设置为当前日期推后180天 3
+			CTime tEndTime =  CTime::GetCurrentTime() +timespanOneMonth;
+			m_nextDateCtrl.SetTime(&tEndTime);
+
 			SetDlgItemText(IDC_EDIT_RepairNotes,"");
 			SetDlgItemText(IDC_EDIT_RepairItems,"");
 			SetDlgItemText(IDC_EDIT_RepairReserve,"");
@@ -111,22 +122,31 @@ void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
 		break;
 	case OPERATE_TYPE_MODIFY:
 	case OPERATE_TYPE_SHOW:
-
-		SetDlgItemText(IDC_EDIT_RepairLicNumber,m_repairInfo.csLicenseNumber);
-		SetDlgItemText(IDC_EDIT_RepairDate,m_repairInfo.csRepairDate);
-		SetDlgItemText(IDC_EDIT_RepairNextDate,m_repairInfo.csRepairNextDate);
-		SetDlgItemText(IDC_EDIT_RepairNotes,m_repairInfo.strRepairNotes.c_str());
-		SetDlgItemText(IDC_EDIT_RepairItems,m_repairInfo.strRepairItems.c_str());
-		SetDlgItemText(IDC_EDIT_RepairReserve,m_repairInfo.strRepairReserve.c_str());
-
-		if(OPERATE_TYPE_MODIFY == m_bOperateType)
 		{
-			m_AddModifyButton.SetWindowText("修改");
+			SetDlgItemText(IDC_EDIT_RepairLicNumber,m_repairInfo.csLicenseNumber);
+
+			//CTime	tempTime;
+			SYSTEMTIME	systemtime={0};
+			sscanf(m_repairInfo.csRepairDate,"%d-%d-%d",&systemtime.wYear,&systemtime.wMonth,&systemtime.wDay);
+			m_dateCtrl.SetTime(&systemtime);
+			sscanf(m_repairInfo.csRepairNextDate,"%d-%d-%d",&systemtime.wYear,&systemtime.wMonth,&systemtime.wDay);
+			m_nextDateCtrl.SetTime(&systemtime);
+
+			SetDlgItemText(IDC_EDIT_RepairNotes,m_repairInfo.strRepairNotes.c_str());
+			SetDlgItemText(IDC_EDIT_RepairItems,m_repairInfo.strRepairItems.c_str());
+			SetDlgItemText(IDC_EDIT_RepairReserve,m_repairInfo.strRepairReserve.c_str());
+
+			if(OPERATE_TYPE_MODIFY == m_bOperateType)
+			{
+				m_AddModifyButton.SetWindowText("修改");
+			}
+			else
+			{
+				m_AddModifyButton.SetWindowText("返回");
+			}
+
 		}
-		else
-		{
-			m_AddModifyButton.SetWindowText("返回");
-		}
+		
 
 		break;
 	}
@@ -138,6 +158,11 @@ BOOL CRepairInfoDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  ÔÚ´ËÌí¼Ó¶îÍâµÄ³õÊ¼»¯
+
+	m_dateCtrl.SetTime(&CTime::GetCurrentTime());
+	CTimeSpan timespanOneMonth(180,0,0,0); //这里设置为当前日期推后180天 3
+	CTime tEndTime =  CTime::GetCurrentTime() +timespanOneMonth;
+	m_nextDateCtrl.SetTime(&tEndTime);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// Òì³£: OCX ÊôÐÔÒ³Ó¦·µ»Ø FALSE

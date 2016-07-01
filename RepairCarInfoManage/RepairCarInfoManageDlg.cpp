@@ -438,7 +438,6 @@ void CRepairCarInfoManageDlg::OnBnClickedButtonBasicset()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
 	RightPageShow(IDD_SYSSET_BASIC_DLG);
-	((CUserInfoDlg*)m_pages[IDD_USERMNG_MODIFY_DLG])->SetOperateType(OPERATE_TYPE_ADD);
 }
 
 
@@ -471,6 +470,47 @@ HBRUSH CRepairCarInfoManageDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		pDC->SetTextColor(RGB(255,0,0));
 		break;
 	}
+
+	/*
+	if(nCtlColor==CTLCOLOR_BTN)          //更改按钮颜色
+	{
+	//pDC->SetBkMode(TRANSPARENT);
+	pDC->SetTextColor(RGB(0,0,0));
+	pDC->SetBkColor(RGB(121,121,255));   
+	HBRUSH b=CreateSolidBrush(RGB(121,121,255));
+	return b;
+	}
+	else if(nCtlColor==CTLCOLOR_SCROLLBAR)  //
+	{
+	//pDC->SetBkMode(TRANSPARENT);
+	pDC->SetTextColor(RGB(0,0,0));
+	pDC->SetBkColor(RGB(233,233,220));
+	HBRUSH b=CreateSolidBrush(RGB(233,233,220));
+	return b;
+	}
+	else if(nCtlColor==CTLCOLOR_EDIT)   //更改编辑框
+	{
+	//pDC->SetBkMode(TRANSPARENT);
+	pDC->SetTextColor(RGB(0,0,0));
+	pDC->SetBkColor(RGB(165,254,236));
+	HBRUSH b=CreateSolidBrush(RGB(165,254,236));
+	return b;
+	}
+	else if(nCtlColor==CTLCOLOR_STATIC)  //更改静态文本
+	{
+	pDC->SetTextColor(RGB(0,0,0));
+	pDC->SetBkColor(RGB(166,254,1));
+	HBRUSH b=CreateSolidBrush(RGB(166,254,1));
+	return b;
+	}
+	else if(nCtlColor==CTLCOLOR_DLG)   //更改对话框背景色
+	{
+	pDC->SetTextColor(RGB(0,0,0));
+	pDC->SetBkColor(RGB(166,254,1));
+	HBRUSH b=CreateSolidBrush(RGB(166,254,1));
+	return b;
+	}
+	*/
 
 	// TODO:  Return a different brush if the default is not desired
 	return hbr;
