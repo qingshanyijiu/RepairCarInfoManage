@@ -415,6 +415,7 @@ void CRepairCarInfoManageDlg::OnBnClickedBtnUsermodify()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
 	RightPageShow(IDD_USERMNG_MODIFY_DLG);
+	((CUserInfoDlg*)m_pages[IDD_USERMNG_MODIFY_DLG])->SetOperateType(OPERATE_TYPE_ADD);
 }
 
 

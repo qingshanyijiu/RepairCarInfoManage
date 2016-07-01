@@ -3,10 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RepairCarInfoManage", "RepairCarInfoManage\RepairCarInfoManage.vcxproj", "{069822A1-15F1-46F8-A921-CCE2CF57D281}"
 	ProjectSection(ProjectDependencies) = postProject
-		{7EE49DFB-B3CA-BA18-70CB-FF56324D91CE} = {7EE49DFB-B3CA-BA18-70CB-FF56324D91CE}
+		{66B95B2B-84E4-3D65-405B-69ACF7BE951E} = {66B95B2B-84E4-3D65-405B-69ACF7BE951E}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RepairCarInfoSaveDB", "RepairCarInfoSaveDB\RepairCarInfoSaveDB.vcxproj", "{7EE49DFB-B3CA-BA18-70CB-FF56324D91CE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RepairCarInfoSaveDB", "RepairCarInfoSaveDB\RepairCarInfoSaveDB.vcxproj", "{66B95B2B-84E4-3D65-405B-69ACF7BE951E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,10 +18,10 @@ Global
 		{069822A1-15F1-46F8-A921-CCE2CF57D281}.Debug|Win32.Build.0 = Debug|Win32
 		{069822A1-15F1-46F8-A921-CCE2CF57D281}.Release|Win32.ActiveCfg = Release|Win32
 		{069822A1-15F1-46F8-A921-CCE2CF57D281}.Release|Win32.Build.0 = Release|Win32
-		{7EE49DFB-B3CA-BA18-70CB-FF56324D91CE}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7EE49DFB-B3CA-BA18-70CB-FF56324D91CE}.Debug|Win32.Build.0 = Debug|Win32
-		{7EE49DFB-B3CA-BA18-70CB-FF56324D91CE}.Release|Win32.ActiveCfg = Release|Win32
-		{7EE49DFB-B3CA-BA18-70CB-FF56324D91CE}.Release|Win32.Build.0 = Release|Win32
+		{66B95B2B-84E4-3D65-405B-69ACF7BE951E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{66B95B2B-84E4-3D65-405B-69ACF7BE951E}.Debug|Win32.Build.0 = Debug|Win32
+		{66B95B2B-84E4-3D65-405B-69ACF7BE951E}.Release|Win32.ActiveCfg = Release|Win32
+		{66B95B2B-84E4-3D65-405B-69ACF7BE951E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

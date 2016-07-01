@@ -225,6 +225,7 @@ int CRepairInfoTable::GetRepairInfoDataHandle(void * lpPara, int nColumn, char *
 {
 	std::vector<RepairTableInfo>* pRepairList = (std::vector<RepairTableInfo>*)lpPara;
 	RepairTableInfo tempInfo;
+	CConvertChar convertChar;
 
 	for (int i=0;i<nColumn;++i)
 	{
@@ -236,37 +237,37 @@ int CRepairInfoTable::GetRepairInfoDataHandle(void * lpPara, int nColumn, char *
 
 		if (0== strcmp(lppColumnName[i],"licenseNumber"))
 		{
-			strcpy(tempInfo.csLicenseNumber,lppColumnValue[i]);
+			strcpy(tempInfo.csLicenseNumber,convertChar.ToGBK(lppColumnValue[i]));
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"repairDate"))
 		{
-			strcpy(tempInfo.csRepairDate,lppColumnValue[i]);
+			strcpy(tempInfo.csRepairDate,convertChar.ToGBK(lppColumnValue[i]));
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"repairNextDate"))
 		{
-			strcpy(tempInfo.csRepairNextDate,lppColumnValue[i]);
+			strcpy(tempInfo.csRepairNextDate,convertChar.ToGBK(lppColumnValue[i]));
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"repairNotes"))
 		{
-			tempInfo.strRepairNotes = lppColumnValue[i];
+			tempInfo.strRepairNotes = convertChar.ToGBK(lppColumnValue[i]);
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"repairItems"))
 		{
-			tempInfo.strRepairItems = lppColumnValue[i];
+			tempInfo.strRepairItems = convertChar.ToGBK(lppColumnValue[i]);
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"repairReserve"))
 		{
-			tempInfo.strRepairReserve = lppColumnValue[i];
+			tempInfo.strRepairReserve = convertChar.ToGBK(lppColumnValue[i]);
 		}
 	}
 

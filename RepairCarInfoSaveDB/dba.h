@@ -20,7 +20,81 @@ using namespace std;
 
 typedef std::ostringstream sqlstring;
 
-#define MAX_NUM_CHAR 1024
+
+class CConvertChar
+{
+public:
+	CConvertChar(){
+		m_pDst = NULL;
+	}
+
+	~CConvertChar(){
+		if (m_pDst)
+		{
+			delete [] m_pDst;
+			m_pDst = NULL;
+		}
+	}
+
+	char* ToUTF8(const char* lpSrc)
+	{
+		if (m_pDst)
+		{
+			delete [] m_pDst;
+			m_pDst = NULL;
+		}
+
+		m_pDst = ConvertToUTF8(lpSrc);
+		return m_pDst;
+	}
+
+	char* ToGBK(const char* lpSrc)
+	{
+		if (m_pDst)
+		{
+			delete [] m_pDst;
+			m_pDst = NULL;
+		}
+		m_pDst = ConvertToGBK(lpSrc);
+		return m_pDst;
+	}
+
+protected:
+	static char* ConvertToUTF8(const char* lpSrc)
+	{
+		unsigned short* pusUnPath = NULL;
+		int iLen = MultiByteToWideChar(CP_ACP,0,lpSrc,strlen(lpSrc)+1,NULL,0);
+		pusUnPath = new unsigned short[iLen];
+		MultiByteToWideChar(CP_ACP,0,lpSrc,strlen(lpSrc)+1,(LPWSTR)pusUnPath,iLen);
+
+		int iGetLen = WideCharToMultiByte(CP_UTF8,0,(LPWSTR)pusUnPath,iLen,NULL,0,NULL,NULL);
+		char* lpDst = new char[iGetLen];
+		WideCharToMultiByte(CP_UTF8,0,(LPWSTR)pusUnPath,iLen,lpDst,iGetLen,NULL,NULL);
+		delete [] pusUnPath;
+
+		return lpDst;
+	}
+
+	static char* ConvertToGBK(const char* lpSrc)
+	{
+		unsigned short* pusUnPath = NULL;
+		int iLen = MultiByteToWideChar(CP_UTF8,0,lpSrc,strlen(lpSrc)+1,NULL,0);
+		pusUnPath = new unsigned short[iLen];
+		MultiByteToWideChar(CP_UTF8,0,lpSrc,strlen(lpSrc)+1,(LPWSTR)pusUnPath,iLen);
+
+		int iGetLen = WideCharToMultiByte(CP_ACP,0,(LPWSTR)pusUnPath,iLen,NULL,0,NULL,NULL);
+		char* lpDst = new char[iGetLen];
+		WideCharToMultiByte(CP_ACP,0,(LPWSTR)pusUnPath,iLen,lpDst,iGetLen,NULL,NULL);
+
+		delete [] pusUnPath;
+
+		return lpDst;
+	}
+
+private:
+	char*	m_pDst;
+};
+
 class db_operator
 {
 public:
@@ -33,13 +107,9 @@ public:
 
 	int open(const char * lpFilename)
 	{
-		char csUTF8[MAX_PATH]={0};
-		ToUTF8(lpFilename,csUTF8);
+		CConvertChar convectChar;
 
-		int res = sqlite3_open(csUTF8, &p_db_);
-	
-		return res;
-
+		return sqlite3_open(convectChar.ToUTF8(lpFilename), &p_db_);;
 	}
 
 	int close()
@@ -86,9 +156,15 @@ public:
 		
 	}
 
+// 	int execute(const char *sql, sqlite3_callback cb, void * para, char **errmsg)
+// 	{
+// 		return sqlite3_exec(p_db_, sql, cb, para, errmsg);
+// 	}
+
 	int execute(const char *sql, sqlite3_callback cb, void * para, char **errmsg)
 	{
-		return sqlite3_exec(p_db_, sql, cb, para, errmsg);
+		CConvertChar convectChar;
+		return sqlite3_exec(p_db_, convectChar.ToUTF8(sql), cb, para, errmsg);
 	}
 
 	static int query_table_name_handle(void * para, int n_column, char ** column_value, char ** column_name)
@@ -121,22 +197,7 @@ public:
 	{
 		return p_db_;
 	}
-
-	static void ToUTF8(const char* lpSrc,char* lpDst)
-	{
-		unsigned short usUnPath[MAX_PATH]={0};
-		int iLen = MultiByteToWideChar(CP_ACP,0,lpSrc,strlen(lpSrc)+1,(LPWSTR)usUnPath,MAX_PATH);
-		WideCharToMultiByte(CP_UTF8,0,(LPWSTR)usUnPath,iLen,lpDst,MAX_PATH,NULL,NULL);
-	}
-
-	static void ToGBK(const char* lpSrc,char* lpDst)
-	{
-		unsigned short usUnPath[MAX_PATH]={0};
-		int iLen = MultiByteToWideChar(CP_UTF8,0,lpSrc,strlen(lpSrc)+1,(LPWSTR)usUnPath,MAX_PATH);
-		WideCharToMultiByte(CP_ACP,0,(LPWSTR)usUnPath,iLen,lpDst,MAX_PATH,NULL,NULL);
-	}
-
-
+	
 private:
 	db_operator(const db_operator&);
 	db_operator& operator=(const db_operator&);

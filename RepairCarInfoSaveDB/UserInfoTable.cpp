@@ -38,9 +38,7 @@ int	CUserInfoTable::InsertUserInfo(PUserTableInfo	pInfo)
 	sql<<pInfo->csUserPhone<<"','";
 	sql<<pInfo->csUserAddress<<"','";
 	sql<<pInfo->strUserReserve<<"');";
-	char csUTF8[MAX_NUM_CHAR]={0};
-	db_operator::ToUTF8(sql.str().c_str(),csUTF8);
-	iRes = m_pDbBase->m_dbOp.execute(csUTF8, NULL, NULL, NULL);
+	iRes = m_pDbBase->m_dbOp.execute(sql.str().c_str(), NULL, NULL, NULL);
 
 	return iRes;
 }
@@ -52,36 +50,10 @@ int	CUserInfoTable::UpdateUserInfo(PUserTableInfo	pInfo)
 	sqlstring sql;
 
 	sql<<"update UserInfo set ";
-	if (strlen(pInfo->csUserName))
-	{
-		sql<<"userName='"<<pInfo->csUserName<<"'";
-		bUp = true;
-	}
-
-	if (strlen(pInfo->csUserPhone))
-	{
-		if (bUp)
-			sql<<",";
-		sql<<"userPhone='"<<pInfo->csUserPhone<<"'";
-		bUp = true;
-	}
-
-	if (strlen(pInfo->csUserAddress))
-	{
-		if (bUp)
-			sql<<",";
-		sql<<"userAddress='"<<pInfo->csUserAddress<<"'";
-		bUp = true;
-	}
-
-	if (pInfo->strUserReserve.size())
-	{
-		if (bUp)
-			sql<<",";
-		sql<<"userReserve='"<<pInfo->strUserReserve<<"'";
-		bUp = true;
-	}
-
+	sql<<"userName='"<<pInfo->csUserName<<"',";
+	sql<<"userPhone='"<<pInfo->csUserPhone<<"',";
+	sql<<"userAddress='"<<pInfo->csUserAddress<<"',";
+	sql<<"userReserve='"<<pInfo->strUserReserve<<"'";
 	sql<<" where licenseNumber='"<<pInfo->csLicenseNumber<<"';";
 	
 	iRes = m_pDbBase->m_dbOp.execute(sql.str().c_str(), NULL, NULL, NULL);
@@ -155,39 +127,37 @@ int CUserInfoTable::GetUserInfoDataHandle(void * lpPara, int nColumn, char ** lp
 	std::vector<UserTableInfo>* pUserList = (std::vector<UserTableInfo>*)lpPara;
 	UserTableInfo tempUserInfo;
 
-	char csUTF8[1024]={0};
-	
+	CConvertChar convertChar;
 
 	for (int i=0;i<nColumn;++i)
 	{
-		db_operator::ToGBK(lppColumnValue[i],csUTF8);
 		if (0== strcmp(lppColumnName[i],"licenseNumber"))
 		{
-			strcpy(tempUserInfo.csLicenseNumber,csUTF8);
+			strcpy(tempUserInfo.csLicenseNumber,convertChar.ToGBK(lppColumnValue[i]));
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"userName"))
 		{
-			strcpy(tempUserInfo.csUserName,csUTF8);
+			strcpy(tempUserInfo.csUserName,convertChar.ToGBK(lppColumnValue[i]));
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"userPhone"))
 		{
-			strcpy(tempUserInfo.csUserPhone,csUTF8);
+			strcpy(tempUserInfo.csUserPhone,convertChar.ToGBK(lppColumnValue[i]));
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"userAddress"))
 		{
-			strcpy(tempUserInfo.csUserAddress,csUTF8);
+			strcpy(tempUserInfo.csUserAddress,convertChar.ToGBK(lppColumnValue[i]));
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"userReserve"))
 		{
-			tempUserInfo.strUserReserve = csUTF8;
+			tempUserInfo.strUserReserve = convertChar.ToGBK(lppColumnValue[i]);
 		}
 	}
 
