@@ -33,7 +33,10 @@ public:
 
 	int open(const char * lpFilename)
 	{
-		int res = sqlite3_open(lpFilename, &p_db_);
+		char csUTF8[MAX_PATH]={0};
+		ToUTF8(lpFilename,csUTF8);
+
+		int res = sqlite3_open(csUTF8, &p_db_);
 	
 		return res;
 
@@ -117,6 +120,20 @@ public:
 	sqlite3* GetDB()
 	{
 		return p_db_;
+	}
+
+	static void ToUTF8(const char* lpSrc,char* lpDst)
+	{
+		unsigned short usUnPath[MAX_PATH]={0};
+		int iLen = MultiByteToWideChar(CP_ACP,0,lpSrc,strlen(lpSrc)+1,(LPWSTR)usUnPath,MAX_PATH);
+		WideCharToMultiByte(CP_UTF8,0,(LPWSTR)usUnPath,iLen,lpDst,MAX_PATH,NULL,NULL);
+	}
+
+	static void ToGBK(const char* lpSrc,char* lpDst)
+	{
+		unsigned short usUnPath[MAX_PATH]={0};
+		int iLen = MultiByteToWideChar(CP_UTF8,0,lpSrc,strlen(lpSrc)+1,(LPWSTR)usUnPath,MAX_PATH);
+		WideCharToMultiByte(CP_ACP,0,(LPWSTR)usUnPath,iLen,lpDst,MAX_PATH,NULL,NULL);
 	}
 
 

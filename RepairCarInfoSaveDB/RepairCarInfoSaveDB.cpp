@@ -49,7 +49,7 @@ int REPAIRCARINFOSAVEDB_API GetUserInfoByLicNumber(const char* lpLicNumer,int iP
 
 int REPAIRCARINFOSAVEDB_API GetUserInfoByName(const char* lpName,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
 {
-	return CRepairCarInfoSaveImpl::GetInstance()->GetUserInfoByLicNumber(lpName,iPages,iMaxCount,userInfoList,bOrderInc);
+	return CRepairCarInfoSaveImpl::GetInstance()->GetUserInfoByName(lpName,iPages,iMaxCount,userInfoList,bOrderInc);
 }
 
 int REPAIRCARINFOSAVEDB_API GetUserInfoByPhone(const char* lpPhoneNumer,int iPages,int iMaxCount,std::vector<UserTableInfo>& userInfoList,bool bOrderInc/*=true*/)
