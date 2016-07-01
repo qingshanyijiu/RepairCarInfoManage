@@ -50,11 +50,11 @@ void CUserInfoDlg::OnBnClickedBtnUserAdd()
 	CString	strTemp;
 
 	GetDlgItemText(IDC_EDIT_userLicNumber,strTemp);
-	strncpy(m_userInfo.csLicenseNumber,strTemp.operator LPCSTR(),16);
+	strncpy(m_userInfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
 	GetDlgItemText(IDC_EDIT_userName,strTemp);
-	strncpy(m_userInfo.csUserName,strTemp.operator LPCSTR(),16);
+	strncpy(m_userInfo.csUserName,strTemp.operator LPCSTR(),32);
 	GetDlgItemText(IDC_EDIT_userPhone,strTemp);
-	strncpy(m_userInfo.csUserPhone,strTemp.operator LPCSTR(),16);
+	strncpy(m_userInfo.csUserPhone,strTemp.operator LPCSTR(),32);
 	GetDlgItemText(IDC_EDIT_userAddress,strTemp);
 	strncpy(m_userInfo.csUserAddress,strTemp.operator LPCSTR(),64);
 	GetDlgItemText(IDC_EDIT_userReserve,strTemp);
@@ -91,7 +91,6 @@ void CUserInfoDlg::OnBnClickedBtnUserAdd()
 
 void CUserInfoDlg::SetOperateType(BYTE bType,PUserTableInfo pInfo/*=NULL*/)
 {
-	m_userLicNumberEdit.SetReadOnly(FALSE);
 	m_bOperateType = bType;
 	m_userInfo.Clear();
 
@@ -119,7 +118,6 @@ void CUserInfoDlg::SetOperateType(BYTE bType,PUserTableInfo pInfo/*=NULL*/)
 
 		if(OPERATE_TYPE_MODIFY == m_bOperateType)
 		{
-			m_userLicNumberEdit.SetReadOnly(TRUE);
 			m_addMotifyButton.SetWindowText("ÐÞ¸Ä");
 		}
 		else

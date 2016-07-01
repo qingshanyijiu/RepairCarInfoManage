@@ -48,11 +48,15 @@ void CRepairInfoDlg::OnBnClickedBtnRepairadd()
 	CString	strTemp;
 
 	GetDlgItemText(IDC_EDIT_RepairLicNumber,strTemp);
-	strncpy(m_repairInfo.csLicenseNumber,strTemp.operator LPCSTR(),16);
+	strncpy(m_repairInfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
 	GetDlgItemText(IDC_EDIT_RepairDate,strTemp);
-	strncpy(m_repairInfo.csRepairDate,strTemp.operator LPCSTR(),16);
+	strncpy(m_repairInfo.csRepairDate,strTemp.operator LPCSTR(),32);
+	GetDlgItemText(IDC_EDIT_RepairNextDate,strTemp);
+	strncpy(m_repairInfo.csRepairNextDate,strTemp.operator LPCSTR(),32);
 	GetDlgItemText(IDC_EDIT_RepairNotes,strTemp);
 	m_repairInfo.strRepairNotes = strTemp.operator LPCSTR();
+	GetDlgItemText(IDC_EDIT_RepairItems,strTemp);
+	m_repairInfo.strRepairItems= strTemp.operator LPCSTR();
 	GetDlgItemText(IDC_EDIT_RepairReserve,strTemp);
 	m_repairInfo.strRepairReserve = strTemp.operator LPCSTR();
 
@@ -86,7 +90,6 @@ void CRepairInfoDlg::OnBnClickedBtnRepairadd()
 
 void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
 {
-	m_RepairLicNumber.SetReadOnly(FALSE);
 	m_bOperateType = bType;
 	m_repairInfo.Clear();
 	if(pInfo != NULL)
@@ -97,7 +100,9 @@ void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
 		{
 			SetDlgItemText(IDC_EDIT_RepairLicNumber,"");
 			SetDlgItemText(IDC_EDIT_RepairDate,"");
+			SetDlgItemText(IDC_EDIT_RepairNextDate,"");
 			SetDlgItemText(IDC_EDIT_RepairNotes,"");
+			SetDlgItemText(IDC_EDIT_RepairItems,"");
 			SetDlgItemText(IDC_EDIT_RepairReserve,"");
 
 			m_AddModifyButton.SetWindowText("增加");
@@ -109,12 +114,13 @@ void CRepairInfoDlg::SetOperateType(BYTE bType,PRepairTableInfo pInfo/*=NULL*/)
 
 		SetDlgItemText(IDC_EDIT_RepairLicNumber,m_repairInfo.csLicenseNumber);
 		SetDlgItemText(IDC_EDIT_RepairDate,m_repairInfo.csRepairDate);
+		SetDlgItemText(IDC_EDIT_RepairNextDate,m_repairInfo.csRepairNextDate);
 		SetDlgItemText(IDC_EDIT_RepairNotes,m_repairInfo.strRepairNotes.c_str());
-		SetDlgItemText(IDC_EDIT_userReserve,m_repairInfo.strRepairReserve.c_str());
+		SetDlgItemText(IDC_EDIT_RepairItems,m_repairInfo.strRepairItems.c_str());
+		SetDlgItemText(IDC_EDIT_RepairReserve,m_repairInfo.strRepairReserve.c_str());
 
 		if(OPERATE_TYPE_MODIFY == m_bOperateType)
 		{
-			m_RepairLicNumber.SetReadOnly(TRUE);
 			m_AddModifyButton.SetWindowText("修改");
 		}
 		else

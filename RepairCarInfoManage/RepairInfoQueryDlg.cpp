@@ -113,13 +113,7 @@ void CRepairInfoQueryDlg::OnSmenuRepairdetail()
 	if(g_pMainDlg == NULL || m_repairinfolist.GetSelectedCount()<=0)
 		return;
 	int selectIndex = m_repairinfolist.GetSelectionMark();
-	RepairTableInfo rinfo;
-	rinfo.iID = atoi(m_repairinfolist.GetItemText(selectIndex,4));
-	strncpy(rinfo.csLicenseNumber,m_repairinfolist.GetItemText(selectIndex,0).operator LPCSTR(),16);
-	strncpy(rinfo.csRepairDate,m_repairinfolist.GetItemText(selectIndex,1).operator LPCSTR(),16);
-	rinfo.strRepairNotes = m_repairinfolist.GetItemText(selectIndex,2).operator LPCSTR();
-	rinfo.strRepairReserve = m_repairinfolist.GetItemText(selectIndex,3).operator LPCSTR();
-	((CRepairInfoDlg*)(g_pMainDlg->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_SHOW,&rinfo);
+	((CRepairInfoDlg*)(g_pMainDlg->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_SHOW,&m_repairInfoVect[selectIndex]);
 	g_pMainDlg->RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
 	CRepairCarInfoManageDlg::ShowOperateInfo("维修信息 - 详细内容！");
 }
@@ -131,13 +125,7 @@ void CRepairInfoQueryDlg::OnSmenuRepairmodify()
 	if(g_pMainDlg == NULL || m_repairinfolist.GetSelectedCount()<=0)
 		return;
 	int selectIndex = m_repairinfolist.GetSelectionMark();
-	RepairTableInfo rinfo;
-	rinfo.iID = atoi(m_repairinfolist.GetItemText(selectIndex,4));
-	strncpy(rinfo.csLicenseNumber,m_repairinfolist.GetItemText(selectIndex,0).operator LPCSTR(),16);
-	strncpy(rinfo.csRepairDate,m_repairinfolist.GetItemText(selectIndex,1).operator LPCSTR(),16);
-	rinfo.strRepairNotes = m_repairinfolist.GetItemText(selectIndex,2).operator LPCSTR();
-	rinfo.strRepairReserve = m_repairinfolist.GetItemText(selectIndex,3).operator LPCSTR();
-	((CRepairInfoDlg*)(g_pMainDlg->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_MODIFY,&rinfo);
+	((CRepairInfoDlg*)(g_pMainDlg->m_pages[IDD_MaintenanceMng_MODIFY_Dlg]))->SetOperateType(OPERATE_TYPE_MODIFY,&m_repairInfoVect[selectIndex]);
 	g_pMainDlg->RightPageShow(IDD_MaintenanceMng_MODIFY_Dlg);
 	CRepairCarInfoManageDlg::ShowOperateInfo("维修信息 - 修改！");
 }
@@ -173,10 +161,12 @@ BOOL CRepairInfoQueryDlg::OnInitDialog()
 	m_repairinfolist.SetExtendedStyle(dwStyle); //设置扩展风格
 
 	m_repairinfolist.InsertColumn( 0, "车牌号", LVCFMT_LEFT, 80 );
-	m_repairinfolist.InsertColumn( 1, "日期", LVCFMT_LEFT, 100 );
-	m_repairinfolist.InsertColumn( 2, "修车信息", LVCFMT_LEFT, 300 );
-	m_repairinfolist.InsertColumn( 3, "备注", LVCFMT_LEFT, 300 );
-	m_repairinfolist.InsertColumn( 4, "ID", LVCFMT_LEFT, 0 );
+	m_repairinfolist.InsertColumn( 1, "修车日期", LVCFMT_LEFT, 80 );
+	m_repairinfolist.InsertColumn( 2, "下次路程", LVCFMT_LEFT, 80 );
+	m_repairinfolist.InsertColumn( 3, "修车内容", LVCFMT_LEFT, 150 );
+	m_repairinfolist.InsertColumn( 4, "修车项目", LVCFMT_LEFT, 150 );
+	m_repairinfolist.InsertColumn( 5, "备注", LVCFMT_LEFT, 150 );
+	m_repairinfolist.InsertColumn( 6, "ID", LVCFMT_LEFT, 0 );
 
 	m_curpage = 0;
 	m_repairInfoVect.reserve(MAX_QUERY_COUNT);
@@ -193,9 +183,11 @@ void CRepairInfoQueryDlg::OnBnClickedBtnMtQrepairinfo()
 	RepairTableInfo rinfo;
 
 	GetDlgItemText(IDC_EDIT_QrepairLicNumber,strTemp);
-	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),16);
+	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
 	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
-	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),16);
+	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),32);
+	GetDlgItemText(IDC_EDIT_QrepairNextDate,strTemp);
+	strncpy(rinfo.csRepairNextDate,strTemp.operator LPCSTR(),32);
 
 	m_curpage = 0;
 	m_repairInfoVect.clear();
@@ -237,9 +229,11 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQuserbefore()
 	--m_curpage;
 	m_repairInfoVect.clear();
 	GetDlgItemText(IDC_EDIT_QrepairLicNumber,strTemp);
-	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),16);
+	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
 	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
-	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),16);
+	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),32);
+	GetDlgItemText(IDC_EDIT_QrepairNextDate,strTemp);
+	strncpy(rinfo.csRepairNextDate,strTemp.operator LPCSTR(),32);
 	
 	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&rinfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
 	{
@@ -277,9 +271,11 @@ void CRepairInfoQueryDlg::OnBnClickedButtonQusernext()
 	m_repairInfoVect.clear();
 
 	GetDlgItemText(IDC_EDIT_QrepairLicNumber,strTemp);
-	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),16);
+	strncpy(rinfo.csLicenseNumber,strTemp.operator LPCSTR(),32);
 	GetDlgItemText(IDC_EDIT_QrepairDate,strTemp);
-	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),16);
+	strncpy(rinfo.csRepairDate,strTemp.operator LPCSTR(),32);
+	GetDlgItemText(IDC_EDIT_QrepairNextDate,strTemp);
+	strncpy(rinfo.csRepairNextDate,strTemp.operator LPCSTR(),32);
 
 	if(REPAIRCARINFOSAVEDB_SUCCESS != GetRepairInfo(&rinfo,m_curpage,MAX_QUERY_COUNT,m_repairInfoVect,true))
 	{
@@ -314,10 +310,12 @@ void	CRepairInfoQueryDlg::UpdateDataInfo()
 	{ 
 		nRow = m_repairinfolist.InsertItem(i,m_repairInfoVect[i].csLicenseNumber);
 		m_repairinfolist.SetItemText(nRow,1,m_repairInfoVect[i].csRepairDate);
-		m_repairinfolist.SetItemText(nRow,2,m_repairInfoVect[i].strRepairNotes.c_str());
-		m_repairinfolist.SetItemText(nRow,3,m_repairInfoVect[i].strRepairReserve.c_str());
+		m_repairinfolist.SetItemText(nRow,2,m_repairInfoVect[i].csRepairNextDate);
+		m_repairinfolist.SetItemText(nRow,3,m_repairInfoVect[i].strRepairNotes.c_str());
+		m_repairinfolist.SetItemText(nRow,4,m_repairInfoVect[i].strRepairItems.c_str());
+		m_repairinfolist.SetItemText(nRow,5,m_repairInfoVect[i].strRepairReserve.c_str());
 		sprintf_s(idstr,"%d",m_repairInfoVect[i].iID);
-		m_repairinfolist.SetItemText(nRow,4,idstr);
+		m_repairinfolist.SetItemText(nRow,6,idstr);
 	} 
 
 	m_repairinfolist.SetRedraw(TRUE);

@@ -20,7 +20,7 @@ int CRepairInfoTable::InitTable()
 	iRes = m_pDbBase->m_dbOp.get_table("RepairInfo");
 	if (SQLITE_OK != iRes)
 	{
-		const char* lpTableInfoSql = "CREATE TABLE RepairInfo (id INT PRIMARY KEY,licenseNumber TEXT ,repairDate TEXT, repairNotes TEXT,repairReserve	TEXT);";
+		const char* lpTableInfoSql = "CREATE TABLE RepairInfo (id INT PRIMARY KEY,licenseNumber TEXT ,repairDate TEXT,repairNextDate TEXT, repairNotes TEXT,repairItems TEXT,repairReserve	TEXT);";
 		iRes = m_pDbBase->m_dbOp.execute_dml(lpTableInfoSql);
 	}
 
@@ -51,7 +51,9 @@ int	CRepairInfoTable::InsertRepairInfo(PRepairTableInfo	pInfo)
 	sql<<maxid+1<<",'";
 	sql<<pInfo->csLicenseNumber<<"','";
 	sql<<pInfo->csRepairDate<<"','";
+	sql<<pInfo->csRepairNextDate<<"','";
 	sql<<pInfo->strRepairNotes<<"','";
+	sql<<pInfo->strRepairItems<<"','";
 	sql<<pInfo->strRepairReserve<<"');";
 
 	iRes = m_pDbBase->m_dbOp.execute(sql.str().c_str(), NULL, NULL, NULL);
@@ -68,7 +70,9 @@ int	CRepairInfoTable::UpdateRepairInfo(PRepairTableInfo	pInfo)
 	sql<<"update RepairInfo set ";
 	sql<<"licenseNumber='"<<pInfo->csLicenseNumber<<"',";
 	sql<<"repairDate='"<<pInfo->csRepairDate<<"',";
+	sql<<"repairNextDate='"<<pInfo->csRepairNextDate<<"',";
 	sql<<"repairNotes='"<<pInfo->strRepairNotes<<"',";
+	sql<<"repairItems='"<<pInfo->strRepairItems<<"',";
 	sql<<"repairReserve='"<<pInfo->strRepairReserve<<"'";
 	sql<<" where id="<<pInfo->iID<<";";
 	/*
@@ -121,14 +125,18 @@ int CRepairInfoTable::GetRepairInfo(const PRepairTableInfo const pInfo,int iPage
 	{
 		sql<<" licenseNumber ='"<<pInfo->csLicenseNumber<<"' and ";
 		sql<<" repairDate ='"<<pInfo->csRepairDate<<"' and ";
+		sql<<" repairNextDate ='"<<pInfo->csRepairNextDate<<"' and ";
 		sql<<" repairNotes ='"<<pInfo->strRepairNotes.c_str()<<"' and ";
+		sql<<" repairItems ='"<<pInfo->strRepairItems.c_str()<<"' and ";
 		sql<<" repairReserve ='"<<pInfo->strRepairReserve.c_str()<<"' ";
 	}
 	else
 	{
 		sql<<" licenseNumber like '%"<<pInfo->csLicenseNumber<<"%' and ";
 		sql<<" repairDate like '%"<<pInfo->csRepairDate<<"%' and ";
+		sql<<" repairNextDate like '%"<<pInfo->csRepairNextDate<<"%' and ";
 		sql<<" repairNotes like '%"<<pInfo->strRepairNotes.c_str()<<"%' and ";
+		sql<<" repairItems like '%"<<pInfo->strRepairItems.c_str()<<"%' and ";
 		sql<<" repairReserve like '%"<<pInfo->strRepairReserve.c_str()<<"%' ";
 	}
 	
@@ -238,9 +246,21 @@ int CRepairInfoTable::GetRepairInfoDataHandle(void * lpPara, int nColumn, char *
 			continue;
 		}
 
+		if (0== strcmp(lppColumnName[i],"repairNextDate"))
+		{
+			strcpy(tempInfo.csRepairNextDate,lppColumnValue[i]);
+			continue;
+		}
+
 		if (0== strcmp(lppColumnName[i],"repairNotes"))
 		{
 			tempInfo.strRepairNotes = lppColumnValue[i];
+			continue;
+		}
+
+		if (0== strcmp(lppColumnName[i],"repairItems"))
+		{
+			tempInfo.strRepairItems = lppColumnValue[i];
 			continue;
 		}
 

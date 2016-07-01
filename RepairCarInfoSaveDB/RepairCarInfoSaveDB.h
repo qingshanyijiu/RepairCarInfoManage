@@ -17,9 +17,9 @@
 
 typedef	struct	tagUserTableInfo
 {
-	char		csLicenseNumber[16];
-	char		csUserName[16];
-	char		csUserPhone[16];
+	char		csLicenseNumber[32];
+	char		csUserName[32];
+	char		csUserPhone[32];
 	char		csUserAddress[64];
 	std::string	strUserReserve;
 
@@ -42,9 +42,11 @@ typedef	struct	tagUserTableInfo
 typedef	struct	tagRepairTableInfo
 {
 	int			iID;
-	char		csLicenseNumber[16];
-	char		csRepairDate[16];		//YYYY-MM-DD
+	char		csLicenseNumber[32];
+	char		csRepairDate[32];		//YYYY-MM-DD
+	char		csRepairNextDate[32];
 	std::string	strRepairNotes;
+	std::string	strRepairItems;
 	std::string	strRepairReserve;
 
 	tagRepairTableInfo()
@@ -56,15 +58,19 @@ typedef	struct	tagRepairTableInfo
 		iID =0;
 		memset(csLicenseNumber,0,sizeof(csLicenseNumber));
 		memset(csRepairDate,0,sizeof(csRepairDate));
+		memset(csRepairNextDate,0,sizeof(csRepairNextDate));
 		strRepairNotes.clear();
+		strRepairItems.clear();
 		strRepairReserve.clear();
 	}
 
 	void Copy(tagRepairTableInfo& info){
 		iID = info.iID;
-		strncpy(csLicenseNumber,info.csLicenseNumber,16);
-		strncpy(csRepairDate,info.csRepairDate,16);
+		strncpy(csLicenseNumber,info.csLicenseNumber,32);
+		strncpy(csRepairDate,info.csRepairDate,32);
+		strncpy(csRepairNextDate,info.csRepairNextDate,32);
 		strRepairNotes = info.strRepairNotes;
+		strRepairItems = info.strRepairItems;
 		strRepairReserve = info.strRepairReserve;
 	}
 }RepairTableInfo,*PRepairTableInfo;
@@ -103,7 +109,6 @@ int REPAIRCARINFOSAVEDB_API GetRepairInfoByDateRange(const char* lpBeinDate,cons
 int	REPAIRCARINFOSAVEDB_API DeleteRepairInfoByLicNumber(const char* lpLicNumer);
 
 int	REPAIRCARINFOSAVEDB_API DeleteRepairInfoByID(int id);
-
 
 
 #endif
