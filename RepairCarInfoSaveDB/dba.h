@@ -20,7 +20,7 @@ using namespace std;
 
 typedef std::ostringstream sqlstring;
 
-
+#define MAX_NUM_CHAR 1024
 class db_operator
 {
 public:

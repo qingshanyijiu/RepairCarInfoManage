@@ -38,8 +38,9 @@ int	CUserInfoTable::InsertUserInfo(PUserTableInfo	pInfo)
 	sql<<pInfo->csUserPhone<<"','";
 	sql<<pInfo->csUserAddress<<"','";
 	sql<<pInfo->strUserReserve<<"');";
-
-	iRes = m_pDbBase->m_dbOp.execute(sql.str().c_str(), NULL, NULL, NULL);
+	char csUTF8[MAX_NUM_CHAR]={0};
+	db_operator::ToUTF8(sql.str().c_str(),csUTF8);
+	iRes = m_pDbBase->m_dbOp.execute(csUTF8, NULL, NULL, NULL);
 
 	return iRes;
 }
@@ -154,35 +155,39 @@ int CUserInfoTable::GetUserInfoDataHandle(void * lpPara, int nColumn, char ** lp
 	std::vector<UserTableInfo>* pUserList = (std::vector<UserTableInfo>*)lpPara;
 	UserTableInfo tempUserInfo;
 
+	char csUTF8[1024]={0};
+	
+
 	for (int i=0;i<nColumn;++i)
 	{
+		db_operator::ToGBK(lppColumnValue[i],csUTF8);
 		if (0== strcmp(lppColumnName[i],"licenseNumber"))
 		{
-			strcpy(tempUserInfo.csLicenseNumber,lppColumnValue[i]);
+			strcpy(tempUserInfo.csLicenseNumber,csUTF8);
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"userName"))
 		{
-			strcpy(tempUserInfo.csUserName,lppColumnValue[i]);
+			strcpy(tempUserInfo.csUserName,csUTF8);
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"userPhone"))
 		{
-			strcpy(tempUserInfo.csUserPhone,lppColumnValue[i]);
+			strcpy(tempUserInfo.csUserPhone,csUTF8);
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"userAddress"))
 		{
-			strcpy(tempUserInfo.csUserAddress,lppColumnValue[i]);
+			strcpy(tempUserInfo.csUserAddress,csUTF8);
 			continue;
 		}
 
 		if (0== strcmp(lppColumnName[i],"userReserve"))
 		{
-			tempUserInfo.strUserReserve = lppColumnValue[i];
+			tempUserInfo.strUserReserve = csUTF8;
 		}
 	}
 
